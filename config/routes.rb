@@ -10,5 +10,42 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "task_lists#index"
+
+  # Authentication
+  get "signup", to: "users#new"
+  post "signup", to: "users#create"
+  get "login", to: "sessions#new"
+  post "login", to: "sessions#create"
+  delete "logout", to: "sessions#destroy"
+
+  # Task Lists & Items
+  resources :task_lists do
+    member do
+      patch :archive
+      patch :restore
+    end
+    
+    resources :items, only: [:create, :update, :destroy] do
+      member do
+        patch :toggle
+        patch :sort
+      end
+    end
+  end
+
+  # Gamification
+  resource :profile, only: [:show] do
+    get :achievements, on: :collection
+  end
+
+  # Friendships
+  resources :friends, only: [:index, :create, :destroy] do
+    member do
+      patch :accept
+    end
+  end
+
+  # Leaderboard
+  get "leaderboard", to: "leaderboards#show"
 end
