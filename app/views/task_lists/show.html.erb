@@ -1,0 +1,15 @@
+<h1><%= @task_list.title %></h1>
+
+<h2>Pending Items</h2>
+<div id="pending_items">
+  <% @pending_items.each do |item| %>
+    <div><%= item.content %></div>
+  <% end %>
+</div>
+
+<h2>Completed Items</h2>
+<div id="completed_items">
+  <% @completed_items.each do |item| %>
+    <div><%= item.content %></div>
+  <% end %>
+</div>

@@ -1,0 +1,14 @@
+<h1>Task Lists</h1>
+<div id="new_task_list_form">
+  <%= render "form", task_list: TaskList.new %>
+</div>
+
+<h2>Active</h2>
+<div id="task_lists">
+  <%= render partial: "task_list", collection: @active_lists %>
+</div>
+
+<h2>Archived</h2>
+<div id="archived_task_lists">
+  <%= render partial: "task_list", collection: @archived_lists %>
+</div>

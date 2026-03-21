@@ -1,0 +1,4 @@
+<%= form_with(model: task_list, id: dom_id(task_list, "form")) do |form| %>
+  <%= form.text_field :title %>
+  <%= form.submit %>
+<% end %>
