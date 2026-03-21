@@ -12,7 +12,16 @@ class GamificationProfile < ApplicationRecord
   validates :level, presence: true, numericality: { greater_than_or_equal_to: 1 }
   validates :xp, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :streak_days, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :max_streak, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
+  def title
+    case level
+    when 1..2 then "Novato"
+    when 3..4 then "Aventureiro"
+    when 5..9 then "Mestre das Tarefas"
+    else "Lenda Viva"
+    end
+  end
   def recalculate_level!
     new_level = LEVELS.keys.reverse.find { |l| xp >= LEVELS[l] } || 1
     update!(level: new_level) if level != new_level
