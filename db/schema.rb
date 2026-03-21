@@ -10,9 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_21_020011) do
-  create_schema "extensions"
-
+ActiveRecord::Schema[8.1].define(version: 2026_03_21_173851) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "extensions.pg_stat_statements"
   enable_extension "extensions.pgcrypto"
@@ -21,7 +19,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_21_020011) do
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vault.supabase_vault"
 
-  create_table "public.achievements", force: :cascade do |t|
+  create_table "achievements", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description", null: false
     t.string "icon_url"
@@ -32,7 +30,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_21_020011) do
     t.index ["key"], name: "index_achievements_on_key", unique: true
   end
 
-  create_table "public.gamification_profiles", force: :cascade do |t|
+  create_table "gamification_profiles", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "last_activity_date"
     t.integer "level", default: 1, null: false
@@ -43,10 +41,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_21_020011) do
     t.index ["user_id"], name: "index_gamification_profiles_on_user_id", unique: true
   end
 
-  create_table "public.items", force: :cascade do |t|
+  create_table "items", force: :cascade do |t|
     t.string "content"
     t.datetime "created_at", null: false
     t.date "due_date"
+    t.integer "position"
     t.integer "priority", default: 0
     t.integer "recurrence", default: 0
     t.integer "status", default: 0
@@ -55,7 +54,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_21_020011) do
     t.index ["task_list_id"], name: "index_items_on_task_list_id"
   end
 
-  create_table "public.task_lists", force: :cascade do |t|
+  create_table "task_lists", force: :cascade do |t|
     t.string "color"
     t.datetime "created_at", null: false
     t.integer "status", default: 0
@@ -65,7 +64,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_21_020011) do
     t.index ["user_id"], name: "index_task_lists_on_user_id"
   end
 
-  create_table "public.user_achievements", force: :cascade do |t|
+  create_table "user_achievements", force: :cascade do |t|
     t.bigint "achievement_id", null: false
     t.datetime "created_at", null: false
     t.datetime "earned_at", null: false
@@ -76,7 +75,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_21_020011) do
     t.index ["user_id"], name: "index_user_achievements_on_user_id"
   end
 
-  create_table "public.users", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.string "password_digest"
@@ -84,10 +83,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_21_020011) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "public.gamification_profiles", "public.users"
-  add_foreign_key "public.items", "public.task_lists", on_delete: :cascade
-  add_foreign_key "public.task_lists", "public.users", on_delete: :cascade
-  add_foreign_key "public.user_achievements", "public.achievements"
-  add_foreign_key "public.user_achievements", "public.users"
-
+  add_foreign_key "gamification_profiles", "users"
+  add_foreign_key "items", "task_lists", on_delete: :cascade
+  add_foreign_key "task_lists", "users", on_delete: :cascade
+  add_foreign_key "user_achievements", "achievements"
+  add_foreign_key "user_achievements", "users"
 end
