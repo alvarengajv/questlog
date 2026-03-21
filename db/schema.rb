@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_21_014419) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_21_020011) do
   create_schema "extensions"
 
   # These are extensions that must be enabled in order to support this database
@@ -46,6 +46,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_21_014419) do
   create_table "public.items", force: :cascade do |t|
     t.string "content"
     t.datetime "created_at", null: false
+    t.date "due_date"
     t.integer "priority", default: 0
     t.integer "recurrence", default: 0
     t.integer "status", default: 0
