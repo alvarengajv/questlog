@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :task_list do
-    user { nil }
+    user
     title { "MyString" }
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_21_004324) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_21_014419) do
   create_schema "extensions"
 
   # These are extensions that must be enabled in order to support this database
@@ -48,13 +48,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_21_004324) do
     t.datetime "created_at", null: false
     t.integer "priority", default: 0
     t.integer "recurrence", default: 0
+    t.integer "status", default: 0
     t.bigint "task_list_id", null: false
     t.datetime "updated_at", null: false
     t.index ["task_list_id"], name: "index_items_on_task_list_id"
   end
 
   create_table "public.task_lists", force: :cascade do |t|
+    t.string "color"
     t.datetime "created_at", null: false
+    t.integer "status", default: 0
     t.string "title"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
