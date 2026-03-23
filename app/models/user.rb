@@ -6,7 +6,8 @@ class User < ApplicationRecord
   has_many :user_achievements, dependent: :destroy
   has_many :achievements, through: :user_achievements
 
-  validates :email, presence: true, 
+  validates :name, presence: true
+  validates :email, presence: true,
                     uniqueness: { case_sensitive: false },
                     format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 6 }, if: -> { new_record? || !password.nil? }

@@ -9,30 +9,36 @@
 
     <div class="quest-card p-6">
       <%= form_with(model: @user, url: signup_path, local: true, class: "space-y-5") do |f| %>
-        <% if @user.errors.any? %>
-          <div class="quest-flash-alert rounded-lg p-3 text-sm" role="alert">
-            <p class="font-semibold mb-1"><%= pluralize(@user.errors.count, "erro", "erros") %>:</p>
-            <ul class="list-disc ml-4 space-y-0.5 text-xs opacity-90">
-              <% @user.errors.full_messages.each do |msg| %>
-                <li><%= msg %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
+        <div>
+          <%= f.label :name, "Nome", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
+          <%= f.text_field :name, class: "quest-input", placeholder: "Seu nome", autocomplete: "name" %>
+          <% if @user.errors[:name].any? %>
+            <p class="text-[var(--color-critical-hit)] text-xs mt-1"><%= @user.errors[:name].first %></p>
+          <% end %>
+        </div>
 
         <div>
           <%= f.label :email, "Email", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
           <%= f.email_field :email, class: "quest-input", placeholder: "seu@email.com", autocomplete: "email" %>
+          <% if @user.errors[:email].any? %>
+            <p class="text-[var(--color-critical-hit)] text-xs mt-1"><%= @user.errors[:email].first %></p>
+          <% end %>
         </div>
 
         <div>
           <%= f.label :password, "Senha", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
           <%= f.password_field :password, class: "quest-input", placeholder: "••••••••", autocomplete: "new-password" %>
+          <% if @user.errors[:password].any? %>
+            <p class="text-[var(--color-critical-hit)] text-xs mt-1"><%= @user.errors[:password].first %></p>
+          <% end %>
         </div>
 
         <div>
           <%= f.label :password_confirmation, "Confirmar Senha", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
           <%= f.password_field :password_confirmation, class: "quest-input", placeholder: "••••••••", autocomplete: "new-password" %>
+          <% if @user.errors[:password_confirmation].any? %>
+            <p class="text-[var(--color-critical-hit)] text-xs mt-1"><%= @user.errors[:password_confirmation].first %></p>
+          <% end %>
         </div>
 
         <div class="pt-1">

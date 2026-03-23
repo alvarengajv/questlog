@@ -9,6 +9,10 @@
 
     <div class="quest-card p-6">
       <%= form_with url: login_path, local: true, class: "space-y-5" do |f| %>
+        <% if flash[:alert] %>
+          <p class="text-[var(--color-critical-hit)] text-xs text-center"><%= flash[:alert] %></p>
+        <% end %>
+
         <div>
           <%= f.label :email, "Email", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
           <%= f.email_field :email, class: "quest-input", placeholder: "seu@email.com", required: true, autocomplete: "email" %>
