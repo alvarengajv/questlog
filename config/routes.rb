@@ -31,6 +31,8 @@ Rails.application.routes.draw do
     resources :items, only: [:create, :edit, :update, :destroy] do
       member do
         patch :toggle
+      end
+      collection do
         patch :sort
       end
     end

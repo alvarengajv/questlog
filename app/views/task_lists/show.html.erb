@@ -74,7 +74,9 @@
     <span class="text-xs font-normal text-[var(--color-quest-gold-dim)]">(<%= @pending_items.size %>)</span>
   </h2>
 
-  <div id="pending_items" class="space-y-2">
+  <div id="pending_items" class="space-y-2"
+       data-controller="sortable"
+       data-sortable-url-value="<%= sort_task_list_items_path(@task_list) %>">
     <% @pending_items.each do |item| %>
       <%= render partial: "items/item", locals: { item: item } %>
     <% end %>

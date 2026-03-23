@@ -1,4 +1,15 @@
 <div id="<%= dom_id(item) %>" class="quest-card px-4 py-3 flex items-center gap-3 group <%= item.completed? ? 'opacity-50' : '' %>">
+  <%# Drag handle %>
+  <% unless item.completed? %>
+    <div data-sortable-handle class="cursor-grab active:cursor-grabbing text-[var(--color-quest-gold-dim)] hover:text-[var(--color-quest-gold)] transition-colors flex-shrink-0 opacity-0 group-hover:opacity-100">
+      <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
+        <circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/>
+        <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
+        <circle cx="9" cy="19" r="1.5"/><circle cx="15" cy="19" r="1.5"/>
+      </svg>
+    </div>
+  <% end %>
+
   <%# Toggle checkbox %>
   <%= button_to toggle_task_list_item_path(item.task_list, item), method: :patch, class: "bg-transparent border-0 p-0 cursor-pointer flex-shrink-0", aria: { label: item.completed? ? "Marcar como pendente" : "Marcar como concluída" } do %>
     <div class="w-5 h-5 rounded border-2 flex items-center justify-center transition-all

@@ -17,7 +17,7 @@ class TaskListsController < ApplicationController
   end
 
   def show
-    @pending_items = @task_list.items.pending.order(due_date: :asc, priority: :desc)
+    @pending_items = @task_list.items.pending.order(position: :asc, due_date: :asc, priority: :desc)
     @completed_items = @task_list.items.completed.order(updated_at: :desc)
   end
 

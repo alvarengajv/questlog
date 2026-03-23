@@ -1,7 +1,7 @@
 class ItemsController < ApplicationController
   before_action :require_authentication
   before_action :set_task_list
-  before_action :set_item, only: [:edit, :update, :destroy, :toggle, :sort]
+  before_action :set_item, only: [:edit, :update, :destroy, :toggle]
 
   def edit
   end
