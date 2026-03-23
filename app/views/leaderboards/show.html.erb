@@ -1,0 +1,64 @@
+<%# === HEADER === %>
+<div class="mb-8">
+  <%= link_to root_path, class: "back-link" do %>
+    <svg class="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+    </svg>
+    Quest Board
+  <% end %>
+  <h1 class="text-3xl font-bold tracking-wide">Ranking</h1>
+</div>
+
+<%# === LEADERBOARD TABLE === %>
+<div class="quest-card p-6">
+  <% if @rankings.any? %>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-[rgba(201,169,110,0.15)]">
+            <th class="text-left py-3 px-3 text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold">#</th>
+            <th class="text-left py-3 px-3 text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold">Aventureiro</th>
+            <th class="text-center py-3 px-3 text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold">Nível</th>
+            <th class="text-center py-3 px-3 text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold">XP</th>
+            <th class="text-center py-3 px-3 text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold">Streak</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @rankings.each_with_index do |user, index| %>
+            <% position = index + 1 %>
+            <tr class="border-b border-[rgba(201,169,110,0.06)] <%= 'bg-[rgba(201,169,110,0.05)]' if user.id == @current_user_id %>">
+              <td class="py-3 px-3">
+                <% if position <= 3 %>
+                  <span class="font-display font-bold text-lg <%= position == 1 ? 'text-[var(--color-quest-gold)]' : position == 2 ? 'text-[var(--color-aged-linen)]' : 'text-[var(--color-xp-amber)]' %>">
+                    <%= position %>
+                  </span>
+                <% else %>
+                  <span class="text-[var(--color-quest-gold-dim)]"><%= position %></span>
+                <% end %>
+              </td>
+              <td class="py-3 px-3">
+                <span class="font-semibold text-[var(--color-parchment)] <%= 'text-[var(--color-quest-gold)]' if user.id == @current_user_id %>">
+                  <%= user.name %>
+                </span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="font-display font-bold text-[var(--color-mana-blue)]"><%= user.level %></span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="font-semibold text-[var(--color-quest-gold)] tabular-nums"><%= user.xp %></span>
+              </td>
+              <td class="py-3 px-3 text-center">
+                <span class="text-[var(--color-xp-amber)] tabular-nums"><%= user.streak_days %> &#x1F525;</span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="text-center py-8">
+      <div class="text-3xl mb-2 opacity-30">&#x1F3C6;</div>
+      <p class="text-[var(--color-quest-gold-dim)] text-sm">Nenhum aventureiro no ranking ainda.</p>
+    </div>
+  <% end %>
+</div>
