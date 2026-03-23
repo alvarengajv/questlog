@@ -1,9 +1,16 @@
 class RecurrenceService
-  def self.process!(item)
+  def self.call(item)
     return nil unless item.completed? && item.recurring?
 
-    next_occurrence = calculate_next_occurrence(item)
-    next_occurrence
+    next_due_date = calculate_next_occurrence(item)
+
+    item.task_list.items.create!(
+      content: item.content,
+      priority: item.priority,
+      recurrence: item.recurrence,
+      due_date: next_due_date,
+      status: :pending
+    )
   end
 
   def self.calculate_next_occurrence(item)

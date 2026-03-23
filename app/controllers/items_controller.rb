@@ -51,7 +51,7 @@ class ItemsController < ApplicationController
       @gamification_result = GamificationService::Result.new(xp_gained: 0, unlocked_achievements: [])
     end
 
-    @next_occurrence = RecurrenceService.process!(@item)
+    @new_recurring_item = RecurrenceService.call(@item)
 
     respond_to do |format|
       format.turbo_stream

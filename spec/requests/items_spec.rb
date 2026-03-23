@@ -63,7 +63,7 @@ RSpec.describe "Items", type: :request do
         expect(GamificationService).to receive(:item_completed!).with(user, item).and_return(
           GamificationService::Result.new(xp_gained: 10, unlocked_achievements: [])
         )
-        expect(RecurrenceService).to receive(:process!).with(item).and_return(nil)
+        expect(RecurrenceService).to receive(:call).with(item).and_return(nil)
 
         patch toggle_task_list_item_path(task_list, item), as: :turbo_stream
         item.reload
@@ -77,7 +77,7 @@ RSpec.describe "Items", type: :request do
         item.completed!
 
         expect(GamificationService).not_to receive(:item_completed!)
-        expect(RecurrenceService).to receive(:process!).with(item).and_return(nil)
+        expect(RecurrenceService).to receive(:call).with(item).and_return(nil)
 
         patch toggle_task_list_item_path(task_list, item), as: :turbo_stream
         item.reload
