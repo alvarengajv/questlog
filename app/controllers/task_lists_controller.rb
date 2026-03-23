@@ -28,7 +28,7 @@ class TaskListsController < ApplicationController
       respond_to do |format|
         format.html { redirect_to task_lists_path, notice: "Lista criada com sucesso." }
         format.turbo_stream do
-          render turbo_stream: turbo_stream.prepend("task_lists", partial: "task_lists/task_list", locals: { task_list: @task_list })
+          render turbo_stream: turbo_stream.prepend("task_lists", partial: "task_lists/board_column", locals: { task_list: @task_list })
         end
       end
     else
@@ -46,7 +46,7 @@ class TaskListsController < ApplicationController
       respond_to do |format|
         format.html { redirect_to task_lists_path, notice: "Lista atualizada." }
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(@task_list, partial: "task_lists/task_list", locals: { task_list: @task_list })
+          render turbo_stream: turbo_stream.replace(@task_list, partial: "task_lists/board_column", locals: { task_list: @task_list })
         end
       end
     else
@@ -84,7 +84,10 @@ class TaskListsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to task_lists_path, notice: "Lista restaurada." }
       format.turbo_stream do
-        render turbo_stream: turbo_stream.prepend("task_lists", partial: "task_lists/task_list", locals: { task_list: @task_list })
+        render turbo_stream: [
+          turbo_stream.remove(@task_list),
+          turbo_stream.prepend("task_lists", partial: "task_lists/board_column", locals: { task_list: @task_list })
+        ]
       end
     end
   end
