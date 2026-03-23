@@ -1,51 +1,61 @@
 <%# === HEADER === %>
 <div class="mb-6">
   <h1 class="text-3xl font-bold tracking-wide">Quest Board</h1>
-  <%= form_with url: task_lists_path, method: :get, class: "mt-3", data: { turbo_action: "advance" } do |f| %>
-    <%= f.search_field :search, value: params[:search], class: "quest-input text-sm w-full md:w-64", placeholder: "Buscar listas..." %>
+  <%= form_with url: task_lists_path, method: :get, class: "mt-3", data: { turbo_frame: "search_results" } do |f| %>
+    <%= f.search_field :search, value: params[:search], class: "quest-input text-sm w-full md:w-64", placeholder: "Buscar listas...", autofocus: params[:search].present? %>
   <% end %>
 </div>
 
-<%# === BOARD: horizontal scrolling columns like Google Tasks === %>
-<div id="task_lists" class="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 h-[calc(100vh-13rem)] md:h-[calc(100vh-9rem)] items-start board-scroll">
+<%= turbo_frame_tag "search_results" do %>
+  <%# === BOARD: horizontal scrolling columns like Google Tasks === %>
+  <div id="task_lists" class="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 h-[calc(100vh-13rem)] md:h-[calc(100vh-9rem)] items-start board-scroll">
 
-  <% @active_lists.each do |task_list| %>
-    <%= render "board_column", task_list: task_list %>
-  <% end %>
-
-  <%# === NEW LIST COLUMN === %>
-  <div class="flex-shrink-0 w-72">
-    <%= turbo_frame_tag "new_task_list_form" do %>
-      <%= render "form", task_list: TaskList.new %>
+    <% if @active_lists.any? %>
+      <% @active_lists.each do |task_list| %>
+        <%= render "board_column", task_list: task_list %>
+      <% end %>
+    <% else %>
+      <% if params[:search].present? %>
+        <div class="flex-1 flex items-center justify-center py-12">
+          <p class="text-[var(--color-quest-gold-dim)] text-sm opacity-60">Nenhuma lista encontrada para "<%= params[:search] %>".</p>
+        </div>
+      <% end %>
     <% end %>
-  </div>
-</div>
 
-<%# === ARCHIVED LISTS (below board) === %>
-<% if @archived_lists.any? %>
-  <div class="mt-4">
-    <details class="group">
-      <summary class="flex items-center gap-2 cursor-pointer text-[var(--color-quest-gold-dim)]/50 hover:text-[var(--color-quest-gold-dim)] transition-colors text-xs font-medium">
-        <svg class="w-3 h-3 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-        </svg>
-        Listas arquivadas (<%= @archived_lists.size %>)
-      </summary>
-      <div id="archived_task_lists" class="flex gap-3 overflow-x-auto pt-3 pb-2">
-        <% @archived_lists.each do |task_list| %>
-          <div id="<%= dom_id(task_list) %>" class="flex-shrink-0 quest-card px-4 py-3 w-56 flex items-center justify-between">
-            <span class="text-sm text-[var(--color-quest-gold-dim)] truncate"><%= task_list.title %></span>
-            <div class="flex items-center gap-2 flex-shrink-0">
-              <%= button_to restore_task_list_path(task_list), method: :patch, class: "text-[10px] text-[var(--color-forest-sage)] hover:text-[#94B974] transition-colors cursor-pointer bg-transparent border-0" do %>
-                Restaurar
-              <% end %>
-              <%= button_to task_list_path(task_list), method: :delete, class: "text-[10px] text-[var(--color-critical-hit)]/60 hover:text-[var(--color-critical-hit)] transition-colors cursor-pointer bg-transparent border-0", data: { turbo_confirm: "Remover esta lista?" } do %>
-                Excluir
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    </details>
+    <%# === NEW LIST COLUMN === %>
+    <div class="flex-shrink-0 w-72">
+      <%= turbo_frame_tag "new_task_list_form" do %>
+        <%= render "form", task_list: TaskList.new %>
+      <% end %>
+    </div>
   </div>
+
+  <%# === ARCHIVED LISTS (below board) === %>
+  <% if @archived_lists.any? %>
+    <div class="mt-4">
+      <details class="group">
+        <summary class="flex items-center gap-2 cursor-pointer text-[var(--color-quest-gold-dim)]/50 hover:text-[var(--color-quest-gold-dim)] transition-colors text-xs font-medium">
+          <svg class="w-3 h-3 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+          Listas arquivadas (<%= @archived_lists.size %>)
+        </summary>
+        <div id="archived_task_lists" class="flex gap-3 overflow-x-auto pt-3 pb-2">
+          <% @archived_lists.each do |task_list| %>
+            <div id="<%= dom_id(task_list) %>" class="flex-shrink-0 quest-card px-4 py-3 w-56 flex items-center justify-between">
+              <span class="text-sm text-[var(--color-quest-gold-dim)] truncate"><%= task_list.title %></span>
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <%= button_to restore_task_list_path(task_list), method: :patch, class: "text-[10px] text-[var(--color-forest-sage)] hover:text-[#94B974] transition-colors cursor-pointer bg-transparent border-0" do %>
+                  Restaurar
+                <% end %>
+                <%= button_to task_list_path(task_list), method: :delete, class: "text-[10px] text-[var(--color-critical-hit)]/60 hover:text-[var(--color-critical-hit)] transition-colors cursor-pointer bg-transparent border-0", data: { turbo_confirm: "Remover esta lista?" } do %>
+                  Excluir
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </details>
+    </div>
+  <% end %>
 <% end %>

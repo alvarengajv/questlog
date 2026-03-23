@@ -19,6 +19,11 @@ class TaskListsController < ApplicationController
   def show
     @pending_items = @task_list.items.pending.order(position: :asc, due_date: :asc, priority: :desc)
     @completed_items = @task_list.items.completed.order(updated_at: :desc)
+
+    if params[:priority].present?
+      @pending_items = @pending_items.where(priority: params[:priority])
+      @completed_items = @completed_items.where(priority: params[:priority])
+    end
   end
 
   def edit

@@ -41,6 +41,14 @@
   </div>
 </div>
 
+<%# === PRIORITY FILTER === %>
+<div class="mb-4">
+  <%= form_with url: task_list_path(@task_list), method: :get, class: "flex items-center gap-2", data: { turbo_frame: "filtered_items" } do |f| %>
+    <span class="text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider">Filtrar por prioridade:</span>
+    <%= f.select :priority, [["Todas", ""], ["Alta", "high"], ["Média", "medium"], ["Baixa", "low"]], { selected: params[:priority] }, class: "quest-input text-sm w-36", onchange: "this.form.requestSubmit()" %>
+  <% end %>
+</div>
+
 <%# === ADD ITEM FORM === %>
 <div class="quest-card p-4 mb-6">
   <%= form_with(model: [@task_list, Item.new], class: "flex flex-wrap gap-3 items-end") do |f| %>
@@ -64,43 +72,55 @@
   <% end %>
 </div>
 
-<%# === PENDING ITEMS === %>
-<div class="mb-8">
-  <h2 class="text-lg font-semibold tracking-wide text-[var(--color-parchment)] mb-3 flex items-center gap-2">
-    <svg class="w-4 h-4 text-[var(--color-xp-amber)]" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-    </svg>
-    Pendentes
-    <span class="text-xs font-normal text-[var(--color-quest-gold-dim)]">(<%= @pending_items.size %>)</span>
-  </h2>
-
-  <div id="pending_items" class="space-y-2"
-       data-controller="sortable"
-       data-sortable-url-value="<%= sort_task_list_items_path(@task_list) %>">
-    <% @pending_items.each do |item| %>
-      <%= render partial: "items/item", locals: { item: item } %>
-    <% end %>
-  </div>
-
-  <% if @pending_items.empty? %>
-    <p class="text-[var(--color-quest-gold-dim)] text-sm py-6 text-center opacity-60">Todas as tarefas concluídas!</p>
-  <% end %>
-</div>
-
-<%# === COMPLETED ITEMS === %>
-<% if @completed_items.any? %>
-  <div class="quest-divider mb-6"></div>
-  <details class="group" open>
-    <summary class="flex items-center gap-2 cursor-pointer text-[var(--color-quest-gold-dim)] hover:text-[var(--color-quest-gold)] transition-colors text-sm font-medium mb-3">
-      <svg class="w-4 h-4 transition-transform group-open:rotate-90" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+<%= turbo_frame_tag "filtered_items" do %>
+  <%# === PENDING ITEMS === %>
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold tracking-wide text-[var(--color-parchment)] mb-3 flex items-center gap-2">
+      <svg class="w-4 h-4 text-[var(--color-xp-amber)]" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
       </svg>
-      Completos (<%= @completed_items.size %>)
-    </summary>
-    <div id="completed_items" class="space-y-2">
-      <% @completed_items.each do |item| %>
+      Pendentes
+      <span class="text-xs font-normal text-[var(--color-quest-gold-dim)]">(<%= @pending_items.size %>)</span>
+    </h2>
+
+    <div id="pending_items" class="space-y-2"
+         data-controller="sortable"
+         data-sortable-url-value="<%= sort_task_list_items_path(@task_list) %>">
+      <% @pending_items.each do |item| %>
         <%= render partial: "items/item", locals: { item: item } %>
       <% end %>
     </div>
-  </details>
+
+    <% if @pending_items.empty? %>
+      <p class="text-[var(--color-quest-gold-dim)] text-sm py-6 text-center opacity-60">
+        <% if params[:priority].present? %>
+          Nenhuma tarefa pendente com esta prioridade.
+        <% else %>
+          Todas as tarefas concluídas!
+        <% end %>
+      </p>
+    <% end %>
+  </div>
+
+  <%# === COMPLETED ITEMS === %>
+  <% if @completed_items.any? %>
+    <div class="quest-divider mb-6"></div>
+    <details class="group" open>
+      <summary class="flex items-center gap-2 cursor-pointer text-[var(--color-quest-gold-dim)] hover:text-[var(--color-quest-gold)] transition-colors text-sm font-medium mb-3">
+        <svg class="w-4 h-4 transition-transform group-open:rotate-90" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+        </svg>
+        Completos (<%= @completed_items.size %>)
+      </summary>
+      <div id="completed_items" class="space-y-2">
+        <% @completed_items.each do |item| %>
+          <%= render partial: "items/item", locals: { item: item } %>
+        <% end %>
+      </div>
+    </details>
+  <% end %>
+
+  <% if @pending_items.empty? && @completed_items.empty? && params[:priority].present? %>
+    <p class="text-[var(--color-quest-gold-dim)] text-sm py-6 text-center opacity-60">Nenhuma tarefa encontrada com esta prioridade.</p>
+  <% end %>
 <% end %>
