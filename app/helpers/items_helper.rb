@@ -21,7 +21,10 @@ module ItemsHelper
     when "monthly" then "Mensal"
     end
 
-    content_tag(:span, "🔁 #{label}", class: "badge badge-recurrence")
+    tooltip = "Recorrência #{label.downcase}"
+    tooltip += " — próximo: #{item.due_date.strftime("%d/%m/%Y")}" if item.due_date.present?
+
+    content_tag(:span, "🔁 #{label}", class: "badge badge-recurrence", title: tooltip)
   end
 
   def due_date_class(item)
