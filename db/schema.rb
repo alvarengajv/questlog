@@ -39,6 +39,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_23_152027) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["friend_id"], name: "index_friendships_on_friend_id"
+    t.index ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true
     t.index ["user_id"], name: "index_friendships_on_user_id"
   end
 
@@ -97,8 +98,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_23_152027) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "public.friendships", "public.users"
-  add_foreign_key "public.friendships", "public.users", column: "friend_id"
+  add_foreign_key "public.friendships", "public.users", column: "friend_id", on_delete: :cascade
+  add_foreign_key "public.friendships", "public.users", on_delete: :cascade
   add_foreign_key "public.gamification_profiles", "public.users"
   add_foreign_key "public.items", "public.task_lists", on_delete: :cascade
   add_foreign_key "public.task_lists", "public.users", on_delete: :cascade
