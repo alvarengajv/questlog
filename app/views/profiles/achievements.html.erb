@@ -27,7 +27,10 @@
       </h3>
 
       <% if is_unlocked %>
-        <p class="text-xs text-[var(--color-forest-sage)] font-medium mb-2">Desbloqueada!</p>
+        <p class="text-[10px] text-[var(--color-aged-linen)] mb-2"><%= achievement.description %></p>
+        <p class="text-[10px] text-[var(--color-forest-sage)] mb-2">
+          Desbloqueada em <%= @unlock_dates[achievement.id]&.strftime("%d/%m/%Y") %>
+        </p>
         <span class="text-[10px] font-bold text-[var(--color-forest-sage)] bg-[rgba(122,155,90,0.12)] px-2.5 py-0.5 rounded-full">
           +<%= achievement.xp_reward %> XP
         </span>

@@ -25,7 +25,7 @@
   </div>
 
   <%# Stats Grid %>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
     <div class="stat-card">
       <p class="text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold mb-1">Nível</p>
       <p class="text-3xl font-display font-bold text-[var(--color-mana-blue)]"><%= @profile.level %></p>
@@ -41,6 +41,10 @@
     <div class="stat-card">
       <p class="text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold mb-1">Recorde</p>
       <p class="text-3xl font-display font-bold text-[var(--color-forest-sage)]"><%= @profile.max_streak %></p>
+    </div>
+    <div class="stat-card">
+      <p class="text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold mb-1">Tarefas</p>
+      <p class="text-3xl font-display font-bold text-[var(--color-parchment)]"><%= @total_tasks %></p>
     </div>
   </div>
 
