@@ -43,7 +43,7 @@
 <%# Achievement toasts %>
 <% @gamification_result.unlocked_achievements.each do |achievement| %>
   <%= turbo_stream.append "notifications" do %>
-    <div class="quest-toast pointer-events-auto" data-auto-dismiss="5000" style="animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
+    <div class="quest-toast pointer-events-auto" data-controller="flash" data-flash-delay-value="5000" style="animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
       <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[rgba(122,155,90,0.2)] border border-[rgba(122,155,90,0.35)] backdrop-blur-md shadow-lg">
         <span class="text-2xl flex-shrink-0"><%= achievement.icon_url %></span>
         <div>
@@ -58,7 +58,7 @@
 <%# Recurrence toast %>
 <% if @item.completed? && @item.recurring? && @next_occurrence.present? %>
   <%= turbo_stream.append "notifications" do %>
-    <div class="quest-toast pointer-events-auto" data-auto-dismiss="5000" style="animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
+    <div class="quest-toast pointer-events-auto" data-controller="flash" data-flash-delay-value="5000" style="animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
       <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[rgba(147,130,200,0.2)] border border-[rgba(147,130,200,0.25)] backdrop-blur-md shadow-lg">
         <span class="text-2xl flex-shrink-0">🔁</span>
         <div>
@@ -70,19 +70,9 @@
   <% end %>
 <% end %>
 
-<%# Auto-dismiss script for toasts %>
+<%# Remove XP float text after animation %>
 <%= turbo_stream.append "notifications" do %>
   <script>
-    document.querySelectorAll('[data-auto-dismiss]').forEach(function(el) {
-      var delay = parseInt(el.getAttribute('data-auto-dismiss')) || 5000;
-      setTimeout(function() {
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        el.style.opacity = '0';
-        el.style.transform = 'translateX(100%)';
-        setTimeout(function() { el.remove(); }, 500);
-      }, delay);
-    });
-    // Remove XP float text after animation
     document.querySelectorAll('.xp-float-text').forEach(function(el) {
       setTimeout(function() { el.remove(); }, 1600);
     });

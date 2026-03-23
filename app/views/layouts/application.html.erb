@@ -198,22 +198,11 @@
 
     <%# === FLASH MESSAGES === %>
     <% flash.each do |key, message| %>
-      <div role="alert" class="quest-flash quest-flash-autodismiss fixed bottom-6 right-6 z-40
-        <%= key == 'notice' ? 'quest-flash-notice' : 'quest-flash-alert' %>">
+      <div role="alert" class="quest-flash fixed bottom-6 right-6 z-40
+        <%= key == 'notice' ? 'quest-flash-notice' : 'quest-flash-alert' %>"
+        data-controller="flash" data-flash-delay-value="3000">
         <%= message %>
       </div>
     <% end %>
-
-    <script>
-      document.addEventListener("turbo:load", function() {
-        document.querySelectorAll(".quest-flash-autodismiss").forEach(function(el) {
-          setTimeout(function() {
-            el.style.opacity = "0";
-            el.style.transform = "translateY(10px)";
-            setTimeout(function() { el.remove(); }, 500);
-          }, 4000);
-        });
-      });
-    </script>
   </body>
 </html>
