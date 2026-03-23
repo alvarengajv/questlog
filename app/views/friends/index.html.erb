@@ -20,29 +20,31 @@
 </div>
 
 <%# === PENDING RECEIVED === %>
-<% if @pending_received.any? %>
-  <div class="quest-card p-6 mb-6">
-    <h2 class="text-lg font-bold tracking-wide mb-4">Convites Recebidos</h2>
-    <div class="space-y-3">
-      <% @pending_received.each do |friendship| %>
-        <div class="flex items-center justify-between bg-[var(--color-dark-leather-light)] rounded-lg px-4 py-3">
-          <div>
-            <p class="text-sm font-semibold text-[var(--color-parchment)]"><%= friendship.user.name %></p>
-            <p class="text-xs text-[var(--color-quest-gold-dim)]"><%= friendship.user.email %></p>
-          </div>
-          <div class="flex gap-2">
-            <%= button_to accept_friend_path(friendship), method: :patch, class: "quest-btn text-xs py-1.5 px-3" do %>
-              Aceitar
-            <% end %>
-            <%= button_to friend_path(friendship), method: :delete, class: "text-xs text-[var(--color-critical-hit)]/70 hover:text-[var(--color-critical-hit)] transition-colors py-1.5 px-3" do %>
-              Recusar
-            <% end %>
-          </div>
-        </div>
-      <% end %>
+<div id="pending_received">
+  <% if @pending_received.any? %>
+    <div class="quest-card p-6 mb-6">
+      <h2 class="text-lg font-bold tracking-wide mb-4">Convites Recebidos</h2>
+      <div class="space-y-3">
+        <% @pending_received.each do |friendship| %>
+          <%= tag.div id: dom_id(friendship), class: "flex items-center justify-between bg-[var(--color-dark-leather-light)] rounded-lg px-4 py-3" do %>
+            <div>
+              <p class="text-sm font-semibold text-[var(--color-parchment)]"><%= friendship.user.name %></p>
+              <p class="text-xs text-[var(--color-quest-gold-dim)]"><%= friendship.user.email %></p>
+            </div>
+            <div class="flex gap-2">
+              <%= button_to accept_friend_path(friendship), method: :patch, class: "quest-btn text-xs py-1.5 px-3" do %>
+                Aceitar
+              <% end %>
+              <%= button_to friend_path(friendship), method: :delete, class: "text-xs text-[var(--color-critical-hit)]/70 hover:text-[var(--color-critical-hit)] transition-colors py-1.5 px-3" do %>
+                Recusar
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>
 
 <%# === PENDING SENT === %>
 <% if @pending_sent.any? %>
@@ -65,28 +67,12 @@
 <%# === ACCEPTED FRIENDS === %>
 <div class="quest-card p-6">
   <h2 class="text-lg font-bold tracking-wide mb-4">Meus Amigos</h2>
-  <% if @accepted_friends.any? %>
-    <div class="space-y-3">
-      <% @accepted_friends.each do |friendship| %>
-        <div class="flex items-center justify-between bg-[var(--color-dark-leather-light)] rounded-lg px-4 py-3">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-[var(--color-dark-leather)] border border-[rgba(201,169,110,0.15)] flex items-center justify-center">
-              <svg class="w-5 h-5 text-[var(--color-quest-gold-dim)]" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-              </svg>
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-[var(--color-parchment)]"><%= friendship.friend.name %></p>
-              <p class="text-xs text-[var(--color-quest-gold-dim)]"><%= friendship.friend.email %></p>
-            </div>
-          </div>
-          <%= button_to friend_path(friendship), method: :delete, class: "text-xs text-[var(--color-critical-hit)]/70 hover:text-[var(--color-critical-hit)] transition-colors py-1.5 px-3", data: { turbo_confirm: "Remover amizade com #{friendship.friend.name}?" } do %>
-            Remover
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-  <% else %>
+  <div id="accepted_friends" class="space-y-3">
+    <% @accepted_friends.each do |friendship| %>
+      <%= render "friends/friend", friendship: friendship %>
+    <% end %>
+  </div>
+  <% if @accepted_friends.empty? %>
     <div class="text-center py-8">
       <div class="text-3xl mb-2 opacity-30">&#x1F91D;</div>
       <p class="text-[var(--color-quest-gold-dim)] text-sm">Nenhum amigo ainda. Envie um convite!</p>

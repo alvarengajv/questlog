@@ -38,18 +38,32 @@ class FriendsController < ApplicationController
   def accept
     friendship = Friendship.pending_for(current_user).find(params[:id])
     friendship.accept!
-    redirect_to friends_path, notice: "Amizade aceita!"
+    @accepted_friendship = current_user.friendships.accepted.where(friend: friendship.user).includes(:friend).first
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.remove(friendship),
+          turbo_stream.append("accepted_friends", partial: "friends/friend", locals: { friendship: @accepted_friendship })
+        ]
+      end
+      format.html { redirect_to friends_path, notice: "Amizade aceita!" }
+    end
   end
 
   def destroy
-    friendship = current_user.friendships.find(params[:id])
-    friend = friendship.friend
+    friendship = Friendship.find(params[:id])
+    @pending_reject = friendship.status == "pending" && friendship.friend == current_user
+    friend = @pending_reject ? friendship.user : friendship.friend
 
     Friendship.transaction do
       friendship.destroy!
-      Friendship.find_by(user: friend, friend: current_user)&.destroy!
+      Friendship.find_by(user: friend, friend: current_user)&.destroy! unless @pending_reject
     end
 
-    redirect_to friends_path, notice: "Amizade removida."
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(friendship) }
+      format.html { redirect_to friends_path, notice: @pending_reject ? "Convite recusado." : "Amizade removida." }
+    end
   end
 end

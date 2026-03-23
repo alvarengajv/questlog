@@ -28,10 +28,12 @@
             <% position = index + 1 %>
             <tr class="border-b border-[rgba(201,169,110,0.06)] <%= 'bg-[rgba(201,169,110,0.05)]' if user.id == @current_user_id %>">
               <td class="py-3 px-3">
-                <% if position <= 3 %>
-                  <span class="font-display font-bold text-lg <%= position == 1 ? 'text-[var(--color-quest-gold)]' : position == 2 ? 'text-[var(--color-aged-linen)]' : 'text-[var(--color-xp-amber)]' %>">
-                    <%= position %>
-                  </span>
+                <% if position == 1 %>
+                  <span class="text-lg">&#x1F947;</span>
+                <% elsif position == 2 %>
+                  <span class="text-lg">&#x1F948;</span>
+                <% elsif position == 3 %>
+                  <span class="text-lg">&#x1F949;</span>
                 <% else %>
                   <span class="text-[var(--color-quest-gold-dim)]"><%= position %></span>
                 <% end %>
