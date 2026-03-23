@@ -1,0 +1,5 @@
+<%# Usage: render "shared/xp_progress", percentage: 75, height_class: "h-2" %>
+<% height_class ||= "" %>
+<div class="xp-bar <%= height_class %>" role="progressbar" aria-valuenow="<%= percentage %>" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso de XP">
+  <div class="xp-bar-fill" style="width: <%= percentage %>%"></div>
+</div>

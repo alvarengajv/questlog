@@ -7,7 +7,7 @@ class TaskListsController < ApplicationController
   end
 
   def index
-    @active_lists = current_user.task_lists.active.order(created_at: :desc)
+    @active_lists = current_user.task_lists.active.includes(:items).order(created_at: :desc)
     @archived_lists = current_user.task_lists.archived.order(created_at: :desc)
 
     if params[:search].present?

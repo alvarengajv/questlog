@@ -1,0 +1,108 @@
+<style>
+*{box-sizing:border-box;margin:0}
+.row{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.swatch{flex:1;min-width:80px;max-width:130px;border-radius:12px;overflow:hidden;border:1px solid rgba(128,128,128,0.15)}
+.color-block{height:72px;display:flex;align-items:flex-end;padding:8px 10px}
+.color-block span{font-size:11px;font-weight:500;letter-spacing:0.3px}
+.meta{padding:8px 10px;background:var(--color-background-secondary)}
+.meta .name{font-size:12px;font-weight:500;color:var(--color-text-primary);line-height:1.3}
+.meta .hex{font-size:11px;color:var(--color-text-tertiary);font-family:var(--font-mono)}
+.section{margin-bottom:8px}
+.section-label{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.8px}
+.divider{height:1px;background:var(--color-border-tertiary);margin:24px 0}
+.mode-row{display:flex;gap:12px;margin-bottom:20px}
+.mode-card{flex:1;border-radius:12px;padding:20px;min-height:120px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid rgba(128,128,128,0.12)}
+.mode-card .label{font-size:11px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px}
+.mode-card .sample-text{font-size:16px;font-weight:500;line-height:1.5}
+.mode-card .sub{font-size:12px;margin-top:4px;opacity:0.7}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.pill{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:500}
+</style>
+
+<div style="padding:4px 0">
+
+<div class="section">
+<div class="section-label">Primary palette</div>
+<div class="row">
+<div class="swatch">
+<div class="color-block" style="background:#1C1712"><span style="color:#A89070">Aa</span></div>
+<div class="meta"><div class="name">Shadow oak</div><div class="hex">#1C1712</div></div>
+</div>
+<div class="swatch">
+<div class="color-block" style="background:#2E2519"><span style="color:#C9A96E">Aa</span></div>
+<div class="meta"><div class="name">Dark leather</div><div class="hex">#2E2519</div></div>
+</div>
+<div class="swatch">
+<div class="color-block" style="background:#C9A96E"><span style="color:#2E2519">Aa</span></div>
+<div class="meta"><div class="name">Quest gold</div><div class="hex">#C9A96E</div></div>
+</div>
+<div class="swatch">
+<div class="color-block" style="background:#E8D5A3"><span style="color:#5C4A2A">Aa</span></div>
+<div class="meta"><div class="name">Parchment</div><div class="hex">#E8D5A3</div></div>
+</div>
+<div class="swatch">
+<div class="color-block" style="background:#F5EDE0"><span style="color:#7A6545">Aa</span></div>
+<div class="meta"><div class="name">Aged linen</div><div class="hex">#F5EDE0</div></div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-label">Accent &amp; semantic</div>
+<div class="row">
+<div class="swatch">
+<div class="color-block" style="background:#D4943A"><span style="color:#FFF">Aa</span></div>
+<div class="meta"><div class="name">XP amber</div><div class="hex">#D4943A</div></div>
+</div>
+<div class="swatch">
+<div class="color-block" style="background:#7A9B5A"><span style="color:#FFF">Aa</span></div>
+<div class="meta"><div class="name">Forest sage</div><div class="hex">#7A9B5A</div></div>
+</div>
+<div class="swatch">
+<div class="color-block" style="background:#B84C3A"><span style="color:#FFF">Aa</span></div>
+<div class="meta"><div class="name">Critical hit</div><div class="hex">#B84C3A</div></div>
+</div>
+<div class="swatch">
+<div class="color-block" style="background:#5C83A5"><span style="color:#FFF">Aa</span></div>
+<div class="meta"><div class="name">Mana blue</div><div class="hex">#5C83A5</div></div>
+</div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+<div class="section-label">Light mode preview</div>
+<div class="mode-card" style="background:#F5EDE0">
+<div>
+<div class="label" style="color:#9A7E55">Quest board</div>
+<div class="sample-text" style="color:#1C1712">Defeat the dragon of procrastination</div>
+<div class="sub" style="color:#7A6545">+250 XP · Legendary difficulty</div>
+</div>
+<div class="pill-row">
+<span class="pill" style="background:#C9A96E;color:#2E2519">Level 12</span>
+<span class="pill" style="background:#7A9B5A;color:#FFF">Complete</span>
+<span class="pill" style="background:#B84C3A;color:#FFF">Overdue</span>
+<span class="pill" style="background:#5C83A5;color:#FFF">In progress</span>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-label">Dark mode preview</div>
+<div class="mode-card" style="background:#1C1712">
+<div>
+<div class="label" style="color:#C9A96E">Quest board</div>
+<div class="sample-text" style="color:#F5EDE0">Defeat the dragon of procrastination</div>
+<div class="sub" style="color:#A89070">+250 XP · Legendary difficulty</div>
+</div>
+<div class="pill-row">
+<span class="pill" style="background:#C9A96E;color:#1C1712">Level 12</span>
+<span class="pill" style="background:#7A9B5A;color:#FFF">Complete</span>
+<span class="pill" style="background:#B84C3A;color:#FFF">Overdue</span>
+<span class="pill" style="background:#5C83A5;color:#FFF">In progress</span>
+</div>
+</div>
+</div>
+
+</div>

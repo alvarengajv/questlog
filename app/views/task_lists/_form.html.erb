@@ -1,4 +1,9 @@
-<%= form_with(model: task_list, id: dom_id(task_list, "form")) do |form| %>
-  <%= form.text_field :title %>
-  <%= form.submit %>
+<%= form_with(model: task_list, id: dom_id(task_list, "form"), class: "quest-card p-4 space-y-3") do |form| %>
+  <div class="flex items-center gap-2">
+    <%= form.label :color, "Cor da lista", class: "sr-only" %>
+    <%= form.color_field :color, class: "w-7 h-7 rounded-lg border border-[rgba(201,169,110,0.2)] bg-transparent cursor-pointer flex-shrink-0", value: task_list.color.presence || "#C9A96E", aria: { label: "Cor da lista" } %>
+    <%= form.label :title, "Nome da lista", class: "sr-only" %>
+    <%= form.text_field :title, class: "quest-input text-sm flex-1", placeholder: "Criar nova lista..." %>
+  </div>
+  <%= form.submit task_list.new_record? ? "Criar lista" : "Salvar", class: "quest-btn w-full text-xs" %>
 <% end %>

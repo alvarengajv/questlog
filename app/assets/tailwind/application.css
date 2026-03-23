@@ -1,0 +1,464 @@
+@import "tailwindcss";
+@source "../../../app/views/**/*.erb";
+@source "../../../app/helpers/**/*.rb";
+@source "../../../app/javascript/**/*.js";
+
+/* ── QuestLog Brand Tokens ── */
+@theme {
+  /* Primary palette */
+  --color-shadow-oak: #1C1712;
+  --color-dark-leather: #2E2519;
+  --color-quest-gold: #C9A96E;
+  --color-parchment: #E8D5A3;
+  --color-aged-linen: #F5EDE0;
+
+  /* Accent & semantic */
+  --color-xp-amber: #D4943A;
+  --color-forest-sage: #7A9B5A;
+  --color-critical-hit: #B84C3A;
+  --color-mana-blue: #5C83A5;
+
+  /* Derived shades */
+  --color-dark-leather-light: #3D3222;
+  --color-quest-gold-dim: #A8894E;
+  --color-quest-gold-glow: #E0C688;
+  --color-parchment-dark: #D4BC87;
+  --color-aged-linen-light: #FAF5ED;
+
+  /* Typography */
+  --font-display: 'Cinzel', 'Palatino Linotype', 'Georgia', serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ── Base styles ── */
+@layer base {
+  html {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-shadow-oak);
+    color: var(--color-aged-linen);
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(201, 169, 110, 0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(212, 148, 58, 0.02) 0%, transparent 40%);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--color-parchment);
+    letter-spacing: 0.02em;
+  }
+
+  ::selection {
+    background-color: rgba(201, 169, 110, 0.3);
+    color: var(--color-aged-linen);
+  }
+}
+
+/* ── Utility classes ── */
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .text-quest-gold {
+    color: var(--color-quest-gold);
+  }
+
+  .bg-dark-leather {
+    background-color: var(--color-dark-leather);
+  }
+}
+
+/* ── Component styles ── */
+@layer components {
+  /* Parchment-style cards */
+  .quest-card {
+    background: linear-gradient(145deg, var(--color-dark-leather) 0%, rgba(46, 37, 25, 0.85) 100%);
+    border: 1px solid rgba(201, 169, 110, 0.15);
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quest-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201, 169, 110, 0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .quest-card:hover {
+    border-color: rgba(201, 169, 110, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(201, 169, 110, 0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Gold-bordered input fields */
+  .quest-input {
+    background-color: rgba(28, 23, 18, 0.6);
+    border: 1px solid rgba(201, 169, 110, 0.2);
+    border-radius: 8px;
+    padding: 0.625rem 0.875rem;
+    color: var(--color-aged-linen);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    width: 100%;
+  }
+
+  .quest-input::placeholder {
+    color: rgba(168, 144, 112, 0.5);
+  }
+
+  .quest-input:focus {
+    outline: none;
+    border-color: var(--color-quest-gold);
+    box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.12), 0 0 20px rgba(201, 169, 110, 0.06);
+  }
+
+  /* Primary action button */
+  .quest-btn {
+    background: linear-gradient(135deg, var(--color-quest-gold) 0%, var(--color-quest-gold-dim) 100%);
+    color: var(--color-shadow-oak);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.625rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quest-btn:hover {
+    background: linear-gradient(135deg, var(--color-quest-gold-glow) 0%, var(--color-quest-gold) 100%);
+    box-shadow: 0 4px 20px rgba(201, 169, 110, 0.3);
+    transform: translateY(-1px);
+  }
+
+  .quest-btn:active {
+    transform: translateY(0);
+  }
+
+  /* Secondary/ghost button */
+  .quest-btn-ghost {
+    background: transparent;
+    color: var(--color-quest-gold);
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.8125rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(201, 169, 110, 0.25);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .quest-btn-ghost:hover {
+    background: rgba(201, 169, 110, 0.08);
+    border-color: rgba(201, 169, 110, 0.4);
+  }
+
+  /* Danger button */
+  .quest-btn-danger {
+    background: transparent;
+    color: var(--color-critical-hit);
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.8125rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(184, 76, 58, 0.3);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .quest-btn-danger:hover {
+    background: rgba(184, 76, 58, 0.1);
+    border-color: rgba(184, 76, 58, 0.5);
+  }
+
+  /* XP progress bar */
+  .xp-bar {
+    height: 6px;
+    background: rgba(201, 169, 110, 0.12);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-xp-amber), var(--color-quest-gold));
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 8px rgba(212, 148, 58, 0.4);
+  }
+
+  /* Back link */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--color-quest-gold-dim);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    transition: color 0.2s ease;
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    color: var(--color-quest-gold);
+  }
+
+  /* Priority badges */
+  .badge {
+    display: inline-block;
+    border-radius: 0.375rem;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .badge-high {
+    background: rgba(184, 76, 58, 0.15);
+    color: #E8695A;
+    border: 1px solid rgba(184, 76, 58, 0.25);
+  }
+
+  .badge-medium {
+    background: rgba(212, 148, 58, 0.15);
+    color: var(--color-xp-amber);
+    border: 1px solid rgba(212, 148, 58, 0.25);
+  }
+
+  .badge-low {
+    background: rgba(122, 155, 90, 0.15);
+    color: #94B974;
+    border: 1px solid rgba(122, 155, 90, 0.25);
+  }
+
+  /* Achievement cards */
+  .achievement-unlocked {
+    background: linear-gradient(145deg, rgba(122, 155, 90, 0.12) 0%, rgba(46, 37, 25, 0.9) 100%);
+    border: 1px solid rgba(122, 155, 90, 0.3);
+  }
+
+  .achievement-locked {
+    background: linear-gradient(145deg, var(--color-dark-leather) 0%, rgba(46, 37, 25, 0.6) 100%);
+    border: 1px solid rgba(201, 169, 110, 0.08);
+    opacity: 0.6;
+  }
+
+  /* Sidenav links */
+  .sidenav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: rgba(245, 237, 224, 0.55);
+    transition: all 0.15s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background: transparent;
+  }
+
+  .sidenav-link:hover {
+    color: var(--color-quest-gold);
+    background: rgba(201, 169, 110, 0.06);
+  }
+
+  .sidenav-link-active {
+    color: var(--color-quest-gold);
+    background: rgba(201, 169, 110, 0.1);
+    border-color: rgba(201, 169, 110, 0.12);
+  }
+
+  /* Bottom nav (mobile) */
+  .bottom-nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 0.375rem 0;
+    color: var(--color-quest-gold-dim);
+    font-weight: 500;
+    transition: color 0.2s ease;
+    text-decoration: none;
+  }
+
+  .bottom-nav-link:hover,
+  .bottom-nav-link-active {
+    color: var(--color-quest-gold);
+  }
+
+  .bottom-nav-link-active {
+    position: relative;
+  }
+
+  .bottom-nav-link-active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 25%;
+    right: 25%;
+    height: 2px;
+    background: var(--color-quest-gold);
+    border-radius: 0 0 2px 2px;
+  }
+
+  /* Divider / ornament */
+  .quest-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.25), transparent);
+  }
+
+  /* Stat card */
+  .stat-card {
+    background: linear-gradient(145deg, var(--color-dark-leather) 0%, rgba(46, 37, 25, 0.85) 100%);
+    border: 1px solid rgba(201, 169, 110, 0.1);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+
+  /* Checkbox styling for items */
+  .quest-checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(201, 169, 110, 0.3);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .quest-checkbox:hover {
+    border-color: var(--color-quest-gold);
+    box-shadow: 0 0 8px rgba(201, 169, 110, 0.15);
+  }
+
+  .quest-checkbox:checked {
+    background: var(--color-forest-sage);
+    border-color: var(--color-forest-sage);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
+    background-size: 14px;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  /* Flash / toast notifications */
+  .quest-flash {
+    backdrop-filter: blur(12px);
+    border-radius: 10px;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    animation: flash-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .quest-flash-notice {
+    background: rgba(122, 155, 90, 0.2);
+    border: 1px solid rgba(122, 155, 90, 0.35);
+    color: #A8D48A;
+  }
+
+  .quest-flash-alert {
+    background: rgba(184, 76, 58, 0.2);
+    border: 1px solid rgba(184, 76, 58, 0.35);
+    color: #E8695A;
+  }
+
+  /* Page entry animation */
+  .page-enter {
+    animation: page-fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+/* ── Keyframes ── */
+@keyframes flash-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Board horizontal scroll */
+.board-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 169, 110, 0.15) transparent;
+}
+
+.board-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.board-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.board-scroll::-webkit-scrollbar-thumb {
+  background: rgba(201, 169, 110, 0.15);
+  border-radius: 3px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-shadow-oak);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 169, 110, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 169, 110, 0.35);
+}

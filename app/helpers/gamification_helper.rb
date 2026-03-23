@@ -13,6 +13,6 @@ module GamificationHelper
   end
 
   def streak_display(profile)
-    "🔥 #{profile.streak_days} dias"
+    content_tag(:span, "🔥", role: "img", aria: { label: "streak" }) + " #{profile.streak_days} dias"
   end
 end

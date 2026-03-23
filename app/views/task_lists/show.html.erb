@@ -1,15 +1,83 @@
-<h1><%= @task_list.title %></h1>
+<%# === HEADER === %>
+<div class="mb-8">
+  <%= link_to root_path, class: "back-link" do %>
+    <svg class="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+    </svg>
+    Quest Board
+  <% end %>
 
-<h2>Pending Items</h2>
-<div id="pending_items">
-  <% @pending_items.each do |item| %>
-    <div><%= item.content %></div>
+  <div class="flex items-center gap-3">
+    <% if @task_list.color.present? %>
+      <div class="w-4 h-4 rounded-full flex-shrink-0" style="background-color: <%= @task_list.color %>; box-shadow: 0 0 12px <%= @task_list.color %>50;"></div>
+    <% end %>
+    <h1 class="text-3xl font-bold tracking-wide"><%= @task_list.title %></h1>
+  </div>
+
+  <%# Progress bar %>
+  <div class="mt-4 max-w-md">
+    <div class="flex justify-between items-center text-xs text-[var(--color-quest-gold-dim)] mb-1.5">
+      <span><%= @task_list.items.completed.count %>/<%= @task_list.items.count %> completos</span>
+      <span><%= @task_list.progress_percentage %>%</span>
+    </div>
+    <%= render "shared/xp_progress", percentage: @task_list.progress_percentage, height_class: "h-2" %>
+  </div>
+</div>
+
+<%# === ADD ITEM FORM === %>
+<div class="quest-card p-4 mb-6">
+  <%= form_with(model: [@task_list, Item.new], class: "flex flex-wrap gap-3 items-end") do |f| %>
+    <div class="flex-1 min-w-[200px]">
+      <%= f.label :content, "Nova tarefa", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
+      <%= f.text_field :content, class: "quest-input", placeholder: "Descreva a tarefa...", required: true %>
+    </div>
+    <div class="w-32">
+      <%= f.label :priority, "Prioridade", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
+      <%= f.select :priority, [["Baixa", "low"], ["Média", "medium"], ["Alta", "high"]], {}, class: "quest-input" %>
+    </div>
+    <div class="w-40">
+      <%= f.label :due_date, "Prazo", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
+      <%= f.date_field :due_date, class: "quest-input" %>
+    </div>
+    <%= f.submit "Adicionar", class: "quest-btn" %>
   <% end %>
 </div>
 
-<h2>Completed Items</h2>
-<div id="completed_items">
-  <% @completed_items.each do |item| %>
-    <div><%= item.content %></div>
+<%# === PENDING ITEMS === %>
+<div class="mb-8">
+  <h2 class="text-lg font-semibold tracking-wide text-[var(--color-parchment)] mb-3 flex items-center gap-2">
+    <svg class="w-4 h-4 text-[var(--color-xp-amber)]" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+    Pendentes
+    <span class="text-xs font-normal text-[var(--color-quest-gold-dim)]">(<%= @pending_items.size %>)</span>
+  </h2>
+
+  <div id="pending_items" class="space-y-2">
+    <% @pending_items.each do |item| %>
+      <%= render partial: "items/item", locals: { item: item } %>
+    <% end %>
+  </div>
+
+  <% if @pending_items.empty? %>
+    <p class="text-[var(--color-quest-gold-dim)] text-sm py-6 text-center opacity-60">Todas as tarefas concluídas!</p>
   <% end %>
 </div>
+
+<%# === COMPLETED ITEMS === %>
+<% if @completed_items.any? %>
+  <div class="quest-divider mb-6"></div>
+  <details class="group" open>
+    <summary class="flex items-center gap-2 cursor-pointer text-[var(--color-quest-gold-dim)] hover:text-[var(--color-quest-gold)] transition-colors text-sm font-medium mb-3">
+      <svg class="w-4 h-4 transition-transform group-open:rotate-90" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+      </svg>
+      Completos (<%= @completed_items.size %>)
+    </summary>
+    <div id="completed_items" class="space-y-2">
+      <% @completed_items.each do |item| %>
+        <%= render partial: "items/item", locals: { item: item } %>
+      <% end %>
+    </div>
+  </details>
+<% end %>

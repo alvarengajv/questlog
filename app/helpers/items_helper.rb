@@ -2,23 +2,23 @@ module ItemsHelper
   def priority_badge(item)
     case item.priority
     when "high"
-      content_tag(:span, "🔴 Alta", class: "text-red-600 bg-red-100 rounded px-2 py-1 text-xs font-bold")
+      content_tag(:span, "🔴 Alta", class: "badge badge-high")
     when "medium"
-      content_tag(:span, "🟡 Média", class: "text-yellow-600 bg-yellow-100 rounded px-2 py-1 text-xs font-bold")
+      content_tag(:span, "🟡 Média", class: "badge badge-medium")
     when "low"
-      content_tag(:span, "🟢 Baixa", class: "text-green-600 bg-green-100 rounded px-2 py-1 text-xs font-bold")
+      content_tag(:span, "🟢 Baixa", class: "badge badge-low")
     else
-      content_tag(:span, "⚪ Nenhuma", class: "text-gray-600 bg-gray-100 rounded px-2 py-1 text-xs font-bold")
+      content_tag(:span, "—", class: "text-[var(--color-quest-gold-dim)] text-[10px]")
     end
   end
 
   def due_date_class(item)
     if item.overdue?
-      "text-red-500 font-bold"
+      "text-[var(--color-critical-hit)] font-semibold"
     elsif item.due_today?
-      "text-yellow-500 font-bold"
+      "text-[var(--color-xp-amber)] font-semibold"
     else
-      "text-gray-500"
+      "text-[var(--color-quest-gold-dim)]"
     end
   end
 end

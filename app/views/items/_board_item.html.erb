@@ -1,0 +1,40 @@
+<div id="<%= dom_id(item) %>" class="flex items-start gap-2.5 px-3 py-2 rounded-lg hover:bg-[rgba(201,169,110,0.04)] transition-colors group">
+  <%# Toggle checkbox %>
+  <%= button_to toggle_task_list_item_path(item.task_list, item), method: :patch, class: "bg-transparent border-0 p-0 cursor-pointer flex-shrink-0 mt-0.5", aria: { label: item.completed? ? "Marcar como pendente" : "Marcar como concluída" } do %>
+    <div class="w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all
+      <%= item.completed? ? 'bg-[var(--color-forest-sage)] border-[var(--color-forest-sage)]' : 'border-[rgba(201,169,110,0.25)] hover:border-[var(--color-quest-gold)]' %>">
+      <% if item.completed? %>
+        <svg class="w-2.5 h-2.5 text-white" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+        </svg>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Content %>
+  <div class="flex-1 min-w-0">
+    <p class="text-[13px] leading-snug <%= item.completed? ? 'line-through text-[var(--color-quest-gold-dim)]/50' : 'text-[var(--color-aged-linen)]' %>">
+      <%= item.content %>
+    </p>
+    <% if item.due_date.present? && !item.completed? %>
+      <div class="flex items-center gap-1 mt-1">
+        <svg class="w-3 h-3 <%= due_date_class(item) %>" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        <span class="text-[10px] font-medium <%= due_date_class(item) %>">
+          <%= item.due_date.strftime("%d/%m") %>
+          <% if item.overdue? %>
+            <span aria-label="Atrasada">&#x2691;</span>
+          <% end %>
+        </span>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Delete (hover) %>
+  <%= button_to task_list_item_path(item.task_list, item), method: :delete, class: "opacity-0 group-hover:opacity-100 transition-opacity bg-transparent border-0 p-0.5 cursor-pointer text-[var(--color-quest-gold-dim)]/30 hover:text-[var(--color-critical-hit)] flex-shrink-0", aria: { label: "Remover tarefa" }, data: { turbo_confirm: "Remover?" } do %>
+    <svg class="w-3.5 h-3.5" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  <% end %>
+</div>
