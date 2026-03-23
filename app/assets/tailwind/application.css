@@ -255,6 +255,12 @@
     border: 1px solid rgba(122, 155, 90, 0.25);
   }
 
+  .badge-recurrence {
+    background: rgba(147, 130, 200, 0.15);
+    color: #B0A0D8;
+    border: 1px solid rgba(147, 130, 200, 0.25);
+  }
+
   /* Achievement cards */
   .achievement-unlocked {
     background: linear-gradient(145deg, rgba(122, 155, 90, 0.12) 0%, rgba(46, 37, 25, 0.9) 100%);

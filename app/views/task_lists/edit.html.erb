@@ -1,0 +1,14 @@
+<div class="mb-8">
+  <%= link_to task_list_path(@task_list), class: "back-link" do %>
+    <svg class="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+    </svg>
+    Voltar
+  <% end %>
+
+  <h1 class="text-3xl font-bold tracking-wide mt-2">Editar Lista</h1>
+</div>
+
+<div class="max-w-md">
+  <%= render "form", task_list: @task_list %>
+</div>

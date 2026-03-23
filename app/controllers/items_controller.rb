@@ -1,7 +1,10 @@
 class ItemsController < ApplicationController
   before_action :require_authentication
   before_action :set_task_list
-  before_action :set_item, only: [:update, :destroy, :toggle, :sort]
+  before_action :set_item, only: [:edit, :update, :destroy, :toggle, :sort]
+
+  def edit
+  end
 
   def create
     @item = @task_list.items.build(item_params)
@@ -24,7 +27,10 @@ class ItemsController < ApplicationController
         format.html { redirect_to @task_list }
       end
     else
-      head :unprocessable_entity
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream { head :unprocessable_entity }
+      end
     end
   end
 

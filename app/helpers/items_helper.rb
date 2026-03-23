@@ -12,6 +12,18 @@ module ItemsHelper
     end
   end
 
+  def recurrence_badge(item)
+    return unless item.recurring?
+
+    label = case item.recurrence
+    when "daily" then "Diária"
+    when "weekly" then "Semanal"
+    when "monthly" then "Mensal"
+    end
+
+    content_tag(:span, "🔁 #{label}", class: "badge badge-recurrence")
+  end
+
   def due_date_class(item)
     if item.overdue?
       "text-[var(--color-critical-hit)] font-semibold"

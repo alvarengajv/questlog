@@ -1,6 +1,6 @@
 class TaskListsController < ApplicationController
   before_action :require_authentication
-  before_action :set_task_list, only: [:show, :update, :destroy, :archive, :restore]
+  before_action :set_task_list, only: [:show, :edit, :update, :destroy, :archive, :restore]
 
   rescue_from ActiveRecord::RecordNotFound do
     head :not_found
@@ -19,6 +19,9 @@ class TaskListsController < ApplicationController
   def show
     @pending_items = @task_list.items.pending.order(due_date: :asc, priority: :desc)
     @completed_items = @task_list.items.completed.order(updated_at: :desc)
+  end
+
+  def edit
   end
 
   def create
@@ -44,14 +47,14 @@ class TaskListsController < ApplicationController
   def update
     if @task_list.update(task_list_params)
       respond_to do |format|
-        format.html { redirect_to task_lists_path, notice: "Lista atualizada." }
+        format.html { redirect_to @task_list, notice: "Lista atualizada." }
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(@task_list, partial: "task_lists/board_column", locals: { task_list: @task_list })
         end
       end
     else
       respond_to do |format|
-        format.html { render :index, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity }
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace("task_list_#{@task_list.id}_form", partial: "task_lists/form", locals: { task_list: @task_list }), status: :unprocessable_entity
         end

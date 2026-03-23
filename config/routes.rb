@@ -28,7 +28,7 @@ Rails.application.routes.draw do
       patch :restore
     end
     
-    resources :items, only: [:create, :update, :destroy] do
+    resources :items, only: [:create, :edit, :update, :destroy] do
       member do
         patch :toggle
         patch :sort

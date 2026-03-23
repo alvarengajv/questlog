@@ -1,0 +1,37 @@
+<div class="mb-8">
+  <%= link_to task_list_path(@task_list), class: "back-link" do %>
+    <svg class="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+    </svg>
+    Voltar
+  <% end %>
+
+  <h1 class="text-3xl font-bold tracking-wide mt-2">Editar Tarefa</h1>
+</div>
+
+<div class="max-w-md">
+  <div class="quest-card p-4">
+    <%= form_with(model: [@task_list, @item], class: "space-y-4") do |f| %>
+      <div>
+        <%= f.label :content, "Tarefa", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
+        <%= f.text_field :content, class: "quest-input", required: true %>
+      </div>
+      <div>
+        <%= f.label :priority, "Prioridade", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
+        <%= f.select :priority, [["Baixa", "low"], ["Média", "medium"], ["Alta", "high"]], {}, class: "quest-input" %>
+      </div>
+      <div>
+        <%= f.label :due_date, "Prazo", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
+        <%= f.date_field :due_date, class: "quest-input" %>
+      </div>
+      <div>
+        <%= f.label :recurrence, "Recorrência", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
+        <%= f.select :recurrence, [["Nenhuma", "none_recurrence"], ["Diária", "daily"], ["Semanal", "weekly"], ["Mensal", "monthly"]], {}, class: "quest-input" %>
+      </div>
+      <div class="flex gap-2">
+        <%= f.submit "Salvar", class: "quest-btn flex-1" %>
+        <%= link_to "Cancelar", task_list_path(@task_list), class: "quest-btn-ghost text-center flex-1" %>
+      </div>
+    <% end %>
+  </div>
+</div>
