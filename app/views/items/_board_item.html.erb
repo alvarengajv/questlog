@@ -1,4 +1,4 @@
-<div id="<%= dom_id(item) %>" class="flex items-start gap-2.5 px-3 py-2 rounded-lg hover:bg-[rgba(201,169,110,0.04)] transition-colors group">
+<div id="<%= dom_id(item) %>" class="flex items-start gap-2.5 px-3 py-2 rounded-lg hover:bg-[rgba(201,169,110,0.04)] transition-colors group item-enter">
   <%# Toggle checkbox %>
   <%= button_to toggle_task_list_item_path(item.task_list, item), method: :patch, class: "bg-transparent border-0 p-0 cursor-pointer flex-shrink-0 mt-0.5", aria: { label: item.completed? ? "Marcar como pendente" : "Marcar como concluída" } do %>
     <div class="w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all

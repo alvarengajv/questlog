@@ -101,7 +101,7 @@
   .quest-card:hover {
     border-color: rgba(201, 169, 110, 0.3);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(201, 169, 110, 0.1);
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.01);
   }
 
   /* Gold-bordered input fields */
@@ -402,17 +402,26 @@
   .page-enter {
     animation: page-fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
+
+  /* Item enter/exit animations */
+  .item-enter {
+    animation: item-slide-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .item-exit {
+    animation: item-slide-out 0.3s cubic-bezier(0.4, 0, 1, 1) both;
+  }
 }
 
 /* ── Keyframes ── */
 @keyframes flash-in {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(-16px);
+    transform: translateX(40px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(0);
   }
 }
 
@@ -444,6 +453,32 @@
   100% {
     opacity: 0;
     transform: translateY(-60px) scale(0.9);
+  }
+}
+
+@keyframes item-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    max-height: 200px;
+  }
+}
+
+@keyframes item-slide-out {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    max-height: 200px;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(20px) scale(0.95);
+    max-height: 0;
   }
 }
 

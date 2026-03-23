@@ -1,1 +1,3 @@
-<%= turbo_stream.remove dom_id(@item) %>
+<%= turbo_stream.action :replace, dom_id(@item) do %>
+  <div id="<%= dom_id(@item) %>" class="item-exit" data-controller="removable" data-action="animationend->removable#remove"></div>
+<% end %>
