@@ -5,6 +5,8 @@ class User < ApplicationRecord
   has_many :task_lists, dependent: :destroy
   has_many :user_achievements, dependent: :destroy
   has_many :achievements, through: :user_achievements
+  has_many :friendships, dependent: :destroy
+  has_many :friends, through: :friendships, source: :friend
 
   validates :name, presence: true
   validates :email, presence: true,

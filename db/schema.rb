@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_23_020321) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_23_152027) do
   create_schema "extensions"
 
   # These are extensions that must be enabled in order to support this database
@@ -30,6 +30,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_23_020321) do
     t.datetime "updated_at", null: false
     t.integer "xp_reward", default: 0, null: false
     t.index ["key"], name: "index_achievements_on_key", unique: true
+  end
+
+  create_table "public.friendships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "friend_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["friend_id"], name: "index_friendships_on_friend_id"
+    t.index ["user_id"], name: "index_friendships_on_user_id"
   end
 
   create_table "public.gamification_profiles", force: :cascade do |t|
@@ -87,6 +97,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_23_020321) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "public.friendships", "public.users"
+  add_foreign_key "public.friendships", "public.users", column: "friend_id"
   add_foreign_key "public.gamification_profiles", "public.users"
   add_foreign_key "public.items", "public.task_lists", on_delete: :cascade
   add_foreign_key "public.task_lists", "public.users", on_delete: :cascade

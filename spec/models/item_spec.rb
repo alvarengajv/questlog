@@ -15,8 +15,8 @@ RSpec.describe Item, type: :model do
   end
 
   describe "scopes" do
-    let(:user) { User.create!(email: "test@example.com", password: "password") }
-    let(:task_list) { TaskList.create!(title: "List 1", user: user) }
+    let(:user) { create(:user) }
+    let(:task_list) { create(:task_list, user: user) }
     let!(:item_completed) { Item.create!(content: "I1", task_list: task_list, status: :completed, priority: :high) }
     let!(:item_pending) { Item.create!(content: "I2", task_list: task_list, status: :pending, priority: :low) }
     let!(:item_medium) { Item.create!(content: "I3", task_list: task_list, status: :pending, priority: :medium) }
