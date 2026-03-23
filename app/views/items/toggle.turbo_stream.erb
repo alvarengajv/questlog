@@ -1,3 +1,90 @@
+<%# Replace the toggled item %>
 <%= turbo_stream.replace dom_id(@item) do %>
   <%= render @item %>
+<% end %>
+
+<%# Update gamification bar (desktop sidebar) %>
+<%= turbo_stream.update "gamification_bar" do %>
+  <% if current_user.gamification_profile %>
+    <div class="px-5 py-4 border-b border-[rgba(201,169,110,0.08)]">
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-display text-[var(--color-xp-amber)] text-xs font-semibold tracking-wider uppercase">Lv.<%= current_user.gamification_profile.level %></span>
+        <span class="text-[var(--color-xp-amber)] text-xs font-medium"><%= streak_display(current_user.gamification_profile) %></span>
+      </div>
+      <div class="mb-1.5">
+        <%= render "shared/xp_progress", percentage: xp_percentage(current_user.gamification_profile) %>
+      </div>
+      <span class="text-[var(--color-quest-gold-dim)] text-[10px] font-medium tabular-nums"><%= current_user.gamification_profile.xp %> XP</span>
+    </div>
+  <% end %>
+<% end %>
+
+<%# Update gamification bar (mobile) %>
+<%= turbo_stream.update "gamification_bar_mobile" do %>
+  <% if current_user.gamification_profile %>
+    <div class="flex items-center gap-2">
+      <span class="font-display text-[var(--color-xp-amber)] text-xs font-semibold">Lv.<%= current_user.gamification_profile.level %></span>
+      <span class="text-[var(--color-quest-gold-dim)] text-[10px] tabular-nums"><%= current_user.gamification_profile.xp %> XP</span>
+    </div>
+  <% end %>
+<% end %>
+
+<%# Floating +XP animation %>
+<% if @gamification_result.xp_gained > 0 %>
+  <%= turbo_stream.append "notifications" do %>
+    <div class="xp-float-text pointer-events-none text-center" style="animation: xp-float 1.5s ease-out forwards;">
+      <span class="font-display text-[var(--color-xp-amber)] text-lg font-bold drop-shadow-[0_0_8px_rgba(212,148,58,0.6)]">
+        +<%= @gamification_result.xp_gained %> XP
+      </span>
+    </div>
+  <% end %>
+<% end %>
+
+<%# Achievement toasts %>
+<% @gamification_result.unlocked_achievements.each do |achievement| %>
+  <%= turbo_stream.append "notifications" do %>
+    <div class="quest-toast pointer-events-auto" data-auto-dismiss="5000" style="animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
+      <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[rgba(122,155,90,0.2)] border border-[rgba(122,155,90,0.35)] backdrop-blur-md shadow-lg">
+        <span class="text-2xl flex-shrink-0"><%= achievement.icon_url %></span>
+        <div>
+          <p class="text-[10px] uppercase tracking-wider text-[var(--color-forest-sage)] font-semibold">Conquista Desbloqueada!</p>
+          <p class="text-sm font-medium text-[var(--color-aged-linen)]"><%= achievement.name %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<%# Recurrence toast %>
+<% if @item.completed? && @item.recurring? && @next_occurrence.present? %>
+  <%= turbo_stream.append "notifications" do %>
+    <div class="quest-toast pointer-events-auto" data-auto-dismiss="5000" style="animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
+      <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[rgba(147,130,200,0.2)] border border-[rgba(147,130,200,0.25)] backdrop-blur-md shadow-lg">
+        <span class="text-2xl flex-shrink-0">🔁</span>
+        <div>
+          <p class="text-[10px] uppercase tracking-wider text-[#B0A0D8] font-semibold">Item Recorrente</p>
+          <p class="text-sm font-medium text-[var(--color-aged-linen)]">Próxima: <%= @next_occurrence.strftime("%d/%m/%Y") %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<%# Auto-dismiss script for toasts %>
+<%= turbo_stream.append "notifications" do %>
+  <script>
+    document.querySelectorAll('[data-auto-dismiss]').forEach(function(el) {
+      var delay = parseInt(el.getAttribute('data-auto-dismiss')) || 5000;
+      setTimeout(function() {
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(100%)';
+        setTimeout(function() { el.remove(); }, 500);
+      }, delay);
+    });
+    // Remove XP float text after animation
+    document.querySelectorAll('.xp-float-text').forEach(function(el) {
+      setTimeout(function() { el.remove(); }, 1600);
+    });
+  </script>
 <% end %>

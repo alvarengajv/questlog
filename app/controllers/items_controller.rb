@@ -45,12 +45,13 @@ class ItemsController < ApplicationController
   def toggle
     if @item.pending?
       @item.completed!
-      GamificationService.item_completed!(current_user, @item)
+      @gamification_result = GamificationService.item_completed!(current_user, @item)
     else
       @item.pending!
+      @gamification_result = GamificationService::Result.new(xp_gained: 0, unlocked_achievements: [])
     end
 
-    RecurrenceService.process!(@item)
+    @next_occurrence = RecurrenceService.process!(@item)
 
     respond_to do |format|
       format.turbo_stream

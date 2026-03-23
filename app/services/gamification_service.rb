@@ -1,25 +1,36 @@
 class GamificationService
+  Result = Struct.new(:xp_gained, :unlocked_achievements, keyword_init: true)
+
   def self.call(user, item)
     new(user, item).call
+  end
+
+  def self.item_completed!(user, item)
+    call(user, item)
   end
 
   def initialize(user, item)
     @user = user
     @item = item
     @profile = user.gamification_profile
+    @unlocked_achievements = []
   end
 
   def call
-    return unless @profile
-    return unless @item.completed?
+    return Result.new(xp_gained: 0, unlocked_achievements: []) unless @profile
+    return Result.new(xp_gained: 0, unlocked_achievements: []) unless @item.completed?
 
-    xp_gained = calculate_xp
-    
+    xp_before = @profile.xp
+
     ActiveRecord::Base.transaction do
+      xp_gained = calculate_xp
       update_streak
       reward_xp(xp_gained)
       check_achievements
     end
+
+    total_xp_gained = @profile.xp - xp_before
+    Result.new(xp_gained: total_xp_gained, unlocked_achievements: @unlocked_achievements)
   end
 
   private
@@ -102,7 +113,9 @@ class GamificationService
       achievement: achievement,
       earned_at: Time.current
     )
-    
+
+    @unlocked_achievements << achievement
+
     if achievement.xp_reward.to_i > 0
       @profile.xp += achievement.xp_reward
       @profile.recalculate_level!

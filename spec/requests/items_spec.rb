@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Items", type: :request do
-  let(:user) { User.create!(email: "test@example.com", password: "password") }
+  let(:user) { User.create!(name: "Test User", email: "test@example.com", password: "password") }
   let(:gamification_profile) { user.gamification_profile } # if it automatically creates one
   let(:task_list) { TaskList.create!(title: "List 1", user: user) }
   let!(:item) { Item.create!(content: "Item 1", task_list: task_list, status: :pending) }
@@ -55,8 +55,10 @@ RSpec.describe "Items", type: :request do
 
   describe "PATCH /task_lists/:task_list_id/items/:id/toggle" do
     it "toggles status from pending to completed and calls services" do
-      expect(GamificationService).to receive(:item_completed!).with(user, item)
-      expect(RecurrenceService).to receive(:process!).with(item)
+      expect(GamificationService).to receive(:item_completed!).with(user, item).and_return(
+        GamificationService::Result.new(xp_gained: 10, unlocked_achievements: [])
+      )
+      expect(RecurrenceService).to receive(:process!).with(item).and_return(nil)
 
       patch toggle_task_list_item_path(task_list, item), as: :turbo_stream
       item.reload
@@ -70,7 +72,7 @@ RSpec.describe "Items", type: :request do
       item.completed!
       
       expect(GamificationService).not_to receive(:item_completed!)
-      expect(RecurrenceService).to receive(:process!).with(item)
+      expect(RecurrenceService).to receive(:process!).with(item).and_return(nil)
 
       patch toggle_task_list_item_path(task_list, item), as: :turbo_stream
       item.reload
