@@ -5,14 +5,14 @@ RSpec.describe "Registrations", type: :request do
     it "renders the signup form" do
       get signup_path
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Cadastro")
+      expect(response.body).to include("Criar Conta")
     end
   end
 
   describe "POST /signup" do
     context "with valid parameters" do
       let(:valid_params) do
-        { user: { email: "test@example.com", password: "password", password_confirmation: "password" } }
+        { user: { name: "Test User", email: "test@example.com", password: "password123", password_confirmation: "password123" } }
       end
 
       it "creates a new User" do
@@ -57,7 +57,7 @@ RSpec.describe "Registrations", type: :request do
       it "re-renders the new template with unprocessable_entity status" do
         post signup_path, params: invalid_params
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.body).to include("Cadastro")
+        expect(response.body).to include("Criar Conta")
       end
     end
   end

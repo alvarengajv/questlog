@@ -8,7 +8,7 @@ RSpec.describe "Sessions", type: :request do
     it "renders the login form" do
       get login_path
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("Login")
+      expect(response.body).to include("Entrar")
       expect(response.body).to include('type="email"')
       expect(response.body).to include('type="password"')
     end

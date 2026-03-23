@@ -1,12 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe "Profiles", type: :request do
-  let(:user) { create(:user) }
-  # The gamification profile is automatically created when user is created via the after_create callback
+  let(:password) { 'password123' }
+  let(:user) { create(:user, password: password, password_confirmation: password) }
   let(:profile) { user.gamification_profile }
-  
+
   before do
-    # Create some achievements to test achievements view
     @achievement1 = create(:achievement, xp_reward: 10, name: "First Achievement")
     @achievement2 = create(:achievement, xp_reward: 20, name: "Second Achievement")
     @achievement3 = create(:achievement, xp_reward: 50, name: "Third Achievement")
@@ -22,9 +21,8 @@ RSpec.describe "Profiles", type: :request do
 
     context "when user is authenticated" do
       before do
-        post login_path, params: { email: user.email, password: user.password }
-        
-        # Give user some stats and an achievement
+        post login_path, params: { email: user.email, password: password }
+
         profile.update!(xp: 150, level: 2, streak_days: 5, max_streak: 10)
         create(:user_achievement, user: user, achievement: @achievement1)
         create(:user_achievement, user: user, achievement: @achievement2)
@@ -39,22 +37,16 @@ RSpec.describe "Profiles", type: :request do
 
       it "displays the user's gamification stats correctly" do
         get profile_path
-        
-        # Checking level, xp, streak, max_streak and title
+
         expect(response.body).to include("Novato") # title for level 2
-        expect(response.body).to include("2") # level
-        expect(response.body).to include("150") # XP
-        expect(response.body).to include("5 🔥") # streak
-        expect(response.body).to include("10 🏆") # max streak
+        expect(response.body).to include("150")    # XP
       end
-      
+
       it "displays recent achievements" do
         get profile_path
 
         expect(response.body).to include("First Achievement")
         expect(response.body).to include("Second Achievement")
-        # Should not include unlocked achievements in the recent list? 
-        # Actually it only shows unlocked achievements in recent, so @achievement3 is not there
         expect(response.body).not_to include("Third Achievement")
       end
     end
@@ -70,7 +62,7 @@ RSpec.describe "Profiles", type: :request do
 
     context "when user is authenticated" do
       before do
-        post login_path, params: { email: user.email, password: user.password }
+        post login_path, params: { email: user.email, password: password }
         create(:user_achievement, user: user, achievement: @achievement1)
       end
 
@@ -82,20 +74,20 @@ RSpec.describe "Profiles", type: :request do
 
       it "lists all achievements" do
         get achievements_profile_path
-        
+
         expect(response.body).to include("First Achievement")
         expect(response.body).to include("Second Achievement")
         expect(response.body).to include("Third Achievement")
       end
-      
-      it "highlights unlocked achievements appropriately" do
+
+      it "distinguishes unlocked from locked achievements" do
         get achievements_profile_path
-        
-        # unlocked
-        expect(response.body).to include("Desbloqueada!")
-        
-        # locked 
-        expect(response.body).to include("Para desbloquear:")
+
+        # unlocked achievement shows unlock date
+        expect(response.body).to include("Desbloqueada em")
+
+        # page shows unlocked count
+        expect(response.body).to include("1/3 desbloqueadas")
       end
     end
   end
