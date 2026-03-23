@@ -7,6 +7,18 @@ class Friendship < ApplicationRecord
   validates :user_id, uniqueness: { scope: :friend_id }
   validate :cannot_friend_self
 
+  scope :accepted, -> { where(status: :accepted) }
+  scope :pending_for, ->(user) { where(friend: user, status: :pending) }
+
+  def accept!
+    transaction do
+      update!(status: :accepted)
+      reverse = Friendship.find_or_initialize_by(user: friend, friend: user)
+      reverse.status = :accepted
+      reverse.save!
+    end
+  end
+
   private
 
   def cannot_friend_self
