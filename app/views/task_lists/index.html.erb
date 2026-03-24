@@ -1,6 +1,6 @@
 <%# === HEADER === %>
-<div class="mb-6">
-  <h1 class="text-3xl font-bold tracking-wide">Quest Board</h1>
+<div class="mb-4 sm:mb-6">
+  <h1 class="text-2xl sm:text-3xl font-bold tracking-wide">Quest Board</h1>
   <%= form_with url: task_lists_path, method: :get, class: "mt-3", data: { turbo_frame: "search_results" } do |f| %>
     <%= f.search_field :search, value: params[:search], class: "quest-input text-sm w-full md:w-64", placeholder: "Buscar listas...", autofocus: params[:search].present? %>
   <% end %>
@@ -8,7 +8,7 @@
 
 <%= turbo_frame_tag "search_results" do %>
   <%# === BOARD: horizontal scrolling columns like Google Tasks === %>
-  <div id="task_lists" class="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 h-[calc(100vh-13rem)] md:h-[calc(100vh-9rem)] items-start board-scroll">
+  <div id="task_lists" class="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 h-[calc(100vh-13rem)] md:h-[calc(100vh-9rem)] items-start board-scroll" data-controller="board-sortable">
 
     <% if @active_lists.any? %>
       <% @active_lists.each do |task_list| %>
@@ -23,7 +23,7 @@
     <% end %>
 
     <%# === NEW LIST COLUMN === %>
-    <div class="flex-shrink-0 w-72">
+    <div class="flex-shrink-0 w-64 sm:w-72">
       <%= turbo_frame_tag "new_task_list_form" do %>
         <%= render "form", task_list: TaskList.new %>
       <% end %>
@@ -34,7 +34,7 @@
   <% if @archived_lists.any? %>
     <div class="mt-4">
       <details class="group">
-        <summary class="flex items-center gap-2 cursor-pointer text-[var(--color-quest-gold-dim)]/50 hover:text-[var(--color-quest-gold-dim)] transition-colors text-xs font-medium">
+        <summary class="flex items-center gap-2 cursor-pointer text-[var(--color-quest-gold-dim)]/60 hover:text-[var(--color-quest-gold-dim)] transition-colors text-xs font-medium">
           <svg class="w-3 h-3 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
           </svg>

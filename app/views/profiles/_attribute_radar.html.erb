@@ -1,14 +1,14 @@
 <% if @attribute_scores_normalized.empty? %>
   <%# Estado vazio: sem listas %>
-  <div class="text-center py-8">
-    <div class="text-3xl mb-2 opacity-30" role="img" aria-label="Gráfico">&#x1F4CA;</div>
-    <p class="text-[var(--color-quest-gold-dim)] text-sm">Crie listas para visualizar seus atributos</p>
+  <div class="quest-empty-state">
+    <div class="quest-empty-state-icon" role="img" aria-label="Gráfico">&#x1F4CA;</div>
+    <p class="quest-empty-state-text">Crie listas para visualizar seus atributos</p>
   </div>
 <% elsif @attribute_scores_normalized.size < 3 %>
   <%# Menos de 3 listas: mostra apenas cards sem radar %>
-  <div class="text-center py-8 mb-4">
-    <div class="text-3xl mb-2 opacity-30" role="img" aria-label="Gráfico">&#x1F4CA;</div>
-    <p class="text-[var(--color-quest-gold-dim)] text-sm">Crie ao menos 3 listas para desbloquear o gráfico radar</p>
+  <div class="quest-empty-state mb-4">
+    <div class="quest-empty-state-icon" role="img" aria-label="Gráfico">&#x1F4CA;</div>
+    <p class="quest-empty-state-text">Crie ao menos 3 listas para desbloquear o gráfico radar</p>
   </div>
 
   <% max_score = @attribute_scores.values.max || 0 %>
@@ -17,13 +17,13 @@
       <% normalized = @attribute_scores_normalized[name] || 0 %>
       <% color = @attribute_colors[name].presence || "var(--color-quest-gold)" %>
       <% is_top = max_score > 0 && raw_score == max_score %>
-      <div class="rounded-lg p-3 bg-[rgba(28,23,18,0.5)] border <%= is_top ? 'border-[var(--color-quest-gold)]' : 'border-[rgba(201,169,110,0.1)]' %>">
+      <div class="rounded-lg p-3 bg-[rgba(28,23,18,0.5)] border <%= is_top ? 'border-[var(--color-quest-gold)]' : 'border-[var(--border-default)]' %>">
         <div class="flex items-center gap-2 mb-2">
           <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: <%= color %>"></span>
           <span class="text-xs font-semibold text-[var(--color-parchment)] truncate"><%= name %></span>
         </div>
         <p class="text-lg font-display font-bold text-[var(--color-quest-gold)] mb-1.5"><%= raw_score %> <span class="text-[10px] font-normal text-[var(--color-quest-gold-dim)]">pts</span></p>
-        <%= render "shared/xp_progress", percentage: normalized, height_class: "h-1.5" %>
+        <%= render "shared/xp_progress", percentage: normalized, size: "sm" %>
       </div>
     <% end %>
   </div>
@@ -37,7 +37,7 @@
         <% normalized = @attribute_scores_normalized[name] || 0 %>
         <% color = @attribute_colors[name].presence || "var(--color-quest-gold)" %>
         <% is_top = max_score > 0 && raw_score == max_score %>
-        <div class="flex items-center gap-3 rounded-lg px-3 py-2.5 border <%= is_top ? 'border-[var(--color-quest-gold)] bg-[rgba(201,169,110,0.06)]' : 'border-[rgba(201,169,110,0.1)] bg-[rgba(28,23,18,0.5)]' %>">
+        <div class="flex items-center gap-3 rounded-lg px-3 py-2.5 border <%= is_top ? 'border-[var(--color-quest-gold)] bg-[rgba(201,169,110,0.06)]' : 'border-[var(--border-default)] bg-[rgba(28,23,18,0.5)]' %>">
           <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: <%= color %>"></span>
           <span class="text-sm font-semibold text-[var(--color-parchment)] truncate flex-1"><%= name %></span>
           <span class="text-lg font-display font-bold text-[var(--color-quest-gold)] tabular-nums"><%= raw_score %></span>

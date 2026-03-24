@@ -22,3 +22,8 @@ achievements.each do |achv|
     a.xp_reward = achv[:xp_reward]
   end
 end
+
+# Retroactively grant achievements to existing users who already qualify
+User.find_each do |user|
+  GamificationService.backfill_achievements!(user)
+end

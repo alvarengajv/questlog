@@ -1,11 +1,11 @@
-<div id="<%= dom_id(task_list) %>" class="flex-shrink-0 w-72 quest-card flex flex-col max-h-full">
+<div id="<%= dom_id(task_list) %>" class="flex-shrink-0 w-64 sm:w-72 quest-card flex flex-col max-h-full">
   <%# Column header %>
-  <div class="px-4 py-3 border-b border-[rgba(201,169,110,0.08)] flex items-center justify-between">
+  <div class="px-4 py-3 border-b border-[var(--border-subtle)] flex items-center justify-between">
     <div class="flex items-center gap-2 min-w-0">
       <% if task_list.color.present? %>
         <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: <%= task_list.color %>;"></div>
       <% end %>
-      <%= link_to task_list_path(task_list), class: "font-display font-semibold text-sm text-[var(--color-parchment)] hover:text-[var(--color-quest-gold)] transition-colors tracking-wide truncate" do %>
+      <%= link_to task_list_path(task_list), class: "font-display font-semibold text-sm text-[var(--color-parchment)] hover:text-[var(--color-quest-gold)] transition-colors tracking-wide truncate", data: { turbo: false } do %>
         <%= task_list.title %>
       <% end %>
     </div>
@@ -24,19 +24,20 @@
   </div>
 
   <%# Progress bar %>
-  <div class="px-4 py-1.5 border-b border-[rgba(201,169,110,0.06)]">
+  <div class="px-4 py-1.5 border-b border-[var(--border-subtle)]">
     <div class="flex justify-between items-center text-[10px] text-[var(--color-quest-gold-dim)] mb-1">
       <span><%= task_list.items.completed.count %>/<%= task_list.items.count %></span>
       <span><%= task_list.progress_percentage %>%</span>
     </div>
-    <%= render "shared/xp_progress", percentage: task_list.progress_percentage, height_class: "h-1" %>
+    <%= render "shared/xp_progress", percentage: task_list.progress_percentage, size: "sm" %>
   </div>
 
   <%# Add item button %>
-  <div class="px-4 py-2 border-b border-[rgba(201,169,110,0.06)]">
-    <%= form_with(model: [task_list, Item.new], class: "flex items-center gap-2") do |f| %>
+  <div class="px-4 py-2 border-b border-[var(--border-subtle)]">
+    <%= form_with(model: [task_list, Item.new], class: "flex items-center gap-2", data: { turbo_frame: "_top" }) do |f| %>
+      <%= hidden_field_tag :source, "board" %>
       <%= f.label :content, "Nova tarefa", class: "sr-only" %>
-      <%= f.text_field :content, class: "quest-input text-xs py-1.5 flex-1", placeholder: "Adicionar uma tarefa..." %>
+      <%= f.text_field :content, class: "quest-input text-xs py-1.5 flex-1", placeholder: "Adicionar uma tarefa...", required: true %>
       <%= f.hidden_field :priority, value: "low" %>
       <%= f.submit "+", class: "w-7 h-7 rounded-md bg-[rgba(201,169,110,0.1)] text-[var(--color-quest-gold)] hover:bg-[rgba(201,169,110,0.2)] transition-colors text-sm font-bold cursor-pointer border-0 flex-shrink-0", aria: { label: "Adicionar tarefa" } %>
     <% end %>
@@ -52,34 +53,37 @@
       undated_items = pending_items.select { |i| i.due_date.nil? }
     %>
 
-    <%# Overdue items %>
-    <% if overdue_items.any? %>
-      <p class="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-critical-hit)]">Atrasadas</p>
-      <% overdue_items.each do |item| %>
-        <%= render partial: "items/board_item", locals: { item: item } %>
+    <%# Draggable pending items zone %>
+    <div id="board_items_<%= task_list.id %>" data-board-sortable-target="column" data-task-list-id="<%= task_list.id %>" class="min-h-[2rem]">
+      <%# Overdue items %>
+      <% if overdue_items.any? %>
+        <p class="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-critical-hit)] pointer-events-none">Atrasadas</p>
+        <% overdue_items.each do |item| %>
+          <%= render partial: "items/board_item", locals: { item: item } %>
+        <% end %>
       <% end %>
-    <% end %>
 
-    <%# Dated items (upcoming) %>
-    <% if dated_items.any? %>
-      <p class="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-quest-gold-dim)]">Com prazo</p>
-      <% dated_items.sort_by(&:due_date).each do |item| %>
-        <%= render partial: "items/board_item", locals: { item: item } %>
+      <%# Dated items (upcoming) %>
+      <% if dated_items.any? %>
+        <p class="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-quest-gold-dim)] pointer-events-none">Com prazo</p>
+        <% dated_items.sort_by(&:due_date).each do |item| %>
+          <%= render partial: "items/board_item", locals: { item: item } %>
+        <% end %>
       <% end %>
-    <% end %>
 
-    <%# Undated items %>
-    <% if undated_items.any? %>
-      <p class="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-quest-gold-dim)]">Sem data</p>
-      <% undated_items.each do |item| %>
-        <%= render partial: "items/board_item", locals: { item: item } %>
+      <%# Undated items %>
+      <% if undated_items.any? %>
+        <p class="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-quest-gold-dim)] pointer-events-none">Sem data</p>
+        <% undated_items.each do |item| %>
+          <%= render partial: "items/board_item", locals: { item: item } %>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
 
     <%# Empty state %>
     <% if pending_items.empty? %>
-      <div class="px-3 py-6 text-center">
-        <p class="text-[var(--color-quest-gold-dim)]/40 text-xs">Nenhuma tarefa pendente</p>
+      <div class="quest-empty-state px-3">
+        <p class="quest-empty-state-text text-xs">Nenhuma tarefa pendente</p>
       </div>
     <% end %>
 

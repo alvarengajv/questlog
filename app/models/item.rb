@@ -5,6 +5,8 @@ class Item < ApplicationRecord
   enum :priority, { low: 0, medium: 1, high: 2 }
   enum :recurrence, { none_recurrence: 0, daily: 1, weekly: 2, monthly: 3 }
 
+  validates :content, presence: true
+
   # Scopes
   scope :completed, -> { where(status: :completed) }
   scope :pending, -> { where(status: :pending) }

@@ -1,3 +1,9 @@
-<%= turbo_stream.append "items" do %>
-  <%= render @item %>
+<% if @source == "board" %>
+  <%= turbo_stream.append "board_items_#{@task_list.id}" do %>
+    <%= render partial: "items/board_item", locals: { item: @item } %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.append "pending_items" do %>
+    <%= render @item %>
+  <% end %>
 <% end %>

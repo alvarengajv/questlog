@@ -13,19 +13,19 @@
   <div class="quest-card p-4">
     <%= form_with(model: [@task_list, @item], class: "space-y-4") do |f| %>
       <div>
-        <%= f.label :content, "Tarefa", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
+        <%= f.label :content, "Tarefa", class: "quest-label" %>
         <%= f.text_field :content, class: "quest-input", required: true %>
       </div>
       <div>
-        <%= f.label :priority, "Prioridade", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
+        <%= f.label :priority, "Prioridade", class: "quest-label" %>
         <%= f.select :priority, [["Baixa", "low"], ["Média", "medium"], ["Alta", "high"]], {}, class: "quest-input" %>
       </div>
       <div>
-        <%= f.label :due_date, "Prazo", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
+        <%= f.label :due_date, "Prazo", class: "quest-label" %>
         <%= f.date_field :due_date, class: "quest-input" %>
       </div>
       <div>
-        <%= f.label :recurrence, "Recorrência", class: "block text-xs font-medium text-[var(--color-quest-gold-dim)] uppercase tracking-wider mb-1.5" %>
+        <%= f.label :recurrence, "Recorrência", class: "quest-label" %>
         <%= f.select :recurrence, [["Nenhuma", "none_recurrence"], ["Diária", "daily"], ["Semanal", "weekly"], ["Mensal", "monthly"]], {}, class: "quest-input" %>
       </div>
       <div class="flex gap-2">

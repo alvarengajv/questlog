@@ -1,5 +1,5 @@
 class GamificationService
-  Result = Struct.new(:xp_gained, :unlocked_achievements, keyword_init: true)
+  Result = Struct.new(:xp_gained, :unlocked_achievements, :leveled_up, :new_level, keyword_init: true)
 
   def self.call(user, item)
     new(user, item).call
@@ -7,6 +7,57 @@ class GamificationService
 
   def self.item_completed!(user, item)
     call(user, item)
+  end
+
+  # Retroactively grant any achievements the user already qualifies for.
+  # Useful after re-seeding achievements or adding new ones.
+  def self.backfill_achievements!(user)
+    profile = user.gamification_profile
+    return unless profile
+
+    completed_items_count = Item.joins(:task_list)
+                                .where(task_lists: { user_id: user.id })
+                                .completed
+                                .count
+
+    has_high_priority = Item.joins(:task_list)
+                            .where(task_lists: { user_id: user.id })
+                            .completed
+                            .where(priority: :high)
+                            .exists?
+
+    unlocked = []
+
+    ActiveRecord::Base.transaction do
+      unlocked += try_unlock(user, profile, "first_task") if completed_items_count >= 1
+      unlocked += try_unlock(user, profile, "task_10") if completed_items_count >= 10
+      unlocked += try_unlock(user, profile, "task_50") if completed_items_count >= 50
+      unlocked += try_unlock(user, profile, "task_100") if completed_items_count >= 100
+      unlocked += try_unlock(user, profile, "high_priority") if has_high_priority
+      unlocked += try_unlock(user, profile, "streak_3") if profile.streak_days >= 3
+      unlocked += try_unlock(user, profile, "streak_7") if profile.streak_days >= 7
+      unlocked += try_unlock(user, profile, "level_2") if profile.level >= 2
+      unlocked += try_unlock(user, profile, "level_5") if profile.level >= 5
+      unlocked += try_unlock(user, profile, "first_list") if user.task_lists.any?
+    end
+
+    unlocked
+  end
+
+  def self.try_unlock(user, profile, key)
+    achievement = Achievement.find_by(key: key)
+    return [] unless achievement
+    return [] if user.user_achievements.exists?(achievement: achievement)
+
+    UserAchievement.create!(user: user, achievement: achievement, earned_at: Time.current)
+
+    if achievement.xp_reward.to_i > 0
+      profile.xp += achievement.xp_reward
+      profile.recalculate_level!
+      profile.save!
+    end
+
+    [ achievement ]
   end
 
   def initialize(user, item)
@@ -17,10 +68,11 @@ class GamificationService
   end
 
   def call
-    return Result.new(xp_gained: 0, unlocked_achievements: []) unless @profile
-    return Result.new(xp_gained: 0, unlocked_achievements: []) unless @item.completed?
+    return Result.new(xp_gained: 0, unlocked_achievements: [], leveled_up: false, new_level: nil) unless @profile
+    return Result.new(xp_gained: 0, unlocked_achievements: [], leveled_up: false, new_level: nil) unless @item.completed?
 
     xp_before = @profile.xp
+    level_before = @profile.level
 
     ActiveRecord::Base.transaction do
       xp_gained = calculate_xp
@@ -30,7 +82,8 @@ class GamificationService
     end
 
     total_xp_gained = @profile.xp - xp_before
-    Result.new(xp_gained: total_xp_gained, unlocked_achievements: @unlocked_achievements)
+    leveled_up = @profile.level > level_before
+    Result.new(xp_gained: total_xp_gained, unlocked_achievements: @unlocked_achievements, leveled_up: leveled_up, new_level: leveled_up ? @profile.level : nil)
   end
 
   private

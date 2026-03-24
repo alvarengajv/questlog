@@ -1,5 +1,10 @@
-<%# Usage: render "shared/xp_progress", percentage: 75, height_class: "h-2" %>
-<% height_class ||= "" %>
-<div class="xp-bar <%= height_class %>" role="progressbar" aria-valuenow="<%= percentage %>" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso de XP">
+<%# Usage: render "shared/xp_progress", percentage: 75, size: "lg" %>
+<%# Sizes: "sm" (4px), default (6px), "lg" (12px) %>
+<% size_class = case local_assigns[:size]
+   when "sm" then "xp-bar-sm"
+   when "lg" then "xp-bar-lg"
+   else local_assigns[:height_class] || ""
+   end %>
+<div class="xp-bar <%= size_class %>" role="progressbar" aria-valuenow="<%= percentage %>" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso de XP">
   <div class="xp-bar-fill" style="width: <%= percentage %>%"></div>
 </div>

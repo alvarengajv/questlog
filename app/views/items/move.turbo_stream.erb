@@ -1,0 +1,7 @@
+<%= turbo_stream.replace dom_id(@source_list) do %>
+  <%= render "task_lists/board_column", task_list: @source_list.reload %>
+<% end %>
+
+<%= turbo_stream.replace dom_id(@target_list) do %>
+  <%= render "task_lists/board_column", task_list: @target_list.reload %>
+<% end %>

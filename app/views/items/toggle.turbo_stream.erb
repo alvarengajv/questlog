@@ -6,7 +6,7 @@
 <%# Update gamification bar (desktop sidebar) %>
 <%= turbo_stream.update "gamification_bar" do %>
   <% if current_user.gamification_profile %>
-    <div class="px-5 py-4 border-b border-[rgba(201,169,110,0.08)]">
+    <div class="px-5 py-4 border-b border-[var(--border-subtle)]">
       <div class="flex items-center justify-between mb-2">
         <span class="font-display text-[var(--color-xp-amber)] text-xs font-semibold tracking-wider uppercase">Lv.<%= current_user.gamification_profile.level %></span>
         <span class="text-[var(--color-xp-amber)] text-xs font-medium"><%= streak_display(current_user.gamification_profile) %></span>
@@ -40,11 +40,26 @@
   <% end %>
 <% end %>
 
+<%# Level up toast %>
+<% if @gamification_result.leveled_up %>
+  <%= turbo_stream.append "notifications" do %>
+    <div class="quest-toast pointer-events-auto" data-controller="flash" data-flash-delay-value="6000" style="animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
+      <div class="quest-toast-base quest-toast-xp">
+        <span class="text-2xl flex-shrink-0">⬆️</span>
+        <div>
+          <p class="text-[10px] uppercase tracking-wider text-[var(--color-xp-amber)] font-semibold">Level Up!</p>
+          <p class="text-sm font-medium text-[var(--color-aged-linen)]">Você alcançou o <span class="text-[var(--color-xp-amber)] font-bold">Nível <%= @gamification_result.new_level %></span></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
 <%# Achievement toasts %>
 <% @gamification_result.unlocked_achievements.each do |achievement| %>
   <%= turbo_stream.append "notifications" do %>
     <div class="quest-toast pointer-events-auto" data-controller="flash" data-flash-delay-value="5000" style="animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
-      <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[rgba(122,155,90,0.2)] border border-[rgba(122,155,90,0.35)] backdrop-blur-md shadow-lg">
+      <div class="quest-toast-base quest-toast-achievement">
         <span class="text-2xl flex-shrink-0"><%= achievement.icon_url %></span>
         <div>
           <p class="text-[10px] uppercase tracking-wider text-[var(--color-forest-sage)] font-semibold">Conquista Desbloqueada!</p>
@@ -59,7 +74,7 @@
 <% if @item.completed? && @item.recurring? && @new_recurring_item.present? %>
   <%= turbo_stream.append "notifications" do %>
     <div class="quest-toast pointer-events-auto" data-controller="flash" data-flash-delay-value="5000" style="animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
-      <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[rgba(147,130,200,0.2)] border border-[rgba(147,130,200,0.25)] backdrop-blur-md shadow-lg">
+      <div class="quest-toast-base quest-toast-recurrence">
         <span class="text-2xl flex-shrink-0">🔁</span>
         <div>
           <p class="text-[10px] uppercase tracking-wider text-[#B0A0D8] font-semibold">Item Recorrente</p>

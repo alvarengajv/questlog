@@ -1,38 +1,31 @@
 <%# === HEADER === %>
-<div class="mb-8">
-  <%= link_to root_path, class: "back-link" do %>
-    <svg class="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-    </svg>
-    Quest Board
-  <% end %>
-  <h1 class="text-3xl font-bold tracking-wide">Amigos</h1>
+<div class="mb-6 sm:mb-8">
+  <h1 class="text-2xl sm:text-3xl font-bold tracking-wide">Amigos</h1>
 </div>
 
 <%# === ADD FRIEND FORM === %>
-<div class="quest-card p-6 mb-6">
+<div class="quest-card p-4 sm:p-6 mb-6">
   <h2 class="text-lg font-bold tracking-wide mb-4">Adicionar Amigo</h2>
-  <%= form_with url: friends_path, method: :post, class: "flex gap-3" do |f| %>
-    <input type="email" name="email" placeholder="Email do amigo" required
-           class="flex-1 bg-[var(--color-dark-leather-light)] border border-[rgba(201,169,110,0.15)] rounded-lg px-4 py-2.5 text-sm text-[var(--color-parchment)] placeholder-[var(--color-quest-gold-dim)]/50 focus:outline-none focus:border-[var(--color-quest-gold-dim)] transition-colors">
-    <button type="submit" class="quest-btn text-sm py-2.5 px-5">Enviar Convite</button>
+  <%= form_with url: friends_path, method: :post, class: "flex flex-col gap-3 sm:max-w-md" do |f| %>
+    <input type="email" name="email" placeholder="Email do amigo" required class="quest-input">
+    <button type="submit" class="quest-btn text-sm py-2.5 px-5 w-full sm:w-fit">Enviar Convite</button>
   <% end %>
 </div>
 
 <%# === PENDING RECEIVED === %>
 <div id="pending_received">
   <% if @pending_received.any? %>
-    <div class="quest-card p-6 mb-6">
+    <div class="quest-card p-4 sm:p-6 mb-6">
       <h2 class="text-lg font-bold tracking-wide mb-4">Convites Recebidos</h2>
       <div class="space-y-3">
         <% @pending_received.each do |friendship| %>
-          <%= tag.div id: dom_id(friendship), class: "flex items-center justify-between bg-[var(--color-dark-leather-light)] rounded-lg px-4 py-3" do %>
-            <div>
-              <p class="text-sm font-semibold text-[var(--color-parchment)]"><%= friendship.user.name %></p>
-              <p class="text-xs text-[var(--color-quest-gold-dim)]"><%= friendship.user.email %></p>
+          <%= tag.div id: dom_id(friendship), class: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[var(--color-dark-leather-light)] rounded-lg px-4 py-3" do %>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-[var(--color-parchment)] truncate"><%= friendship.user.name %></p>
+              <p class="text-xs text-[var(--color-quest-gold-dim)] truncate"><%= friendship.user.email %></p>
             </div>
-            <div class="flex gap-2">
-              <%= button_to accept_friend_path(friendship), method: :patch, class: "quest-btn text-xs py-1.5 px-3" do %>
+            <div class="flex gap-2 flex-shrink-0">
+              <%= button_to accept_friend_path(friendship), method: :patch, class: "quest-btn text-xs py-1.5 px-3 flex-1 sm:flex-initial" do %>
                 Aceitar
               <% end %>
               <%= button_to friend_path(friendship), method: :delete, class: "text-xs text-[var(--color-critical-hit)]/70 hover:text-[var(--color-critical-hit)] transition-colors py-1.5 px-3" do %>
@@ -48,7 +41,7 @@
 
 <%# === PENDING SENT === %>
 <% if @pending_sent.any? %>
-  <div class="quest-card p-6 mb-6">
+  <div class="quest-card p-4 sm:p-6 mb-6">
     <h2 class="text-lg font-bold tracking-wide mb-4">Convites Enviados</h2>
     <div class="space-y-3">
       <% @pending_sent.each do |friendship| %>
@@ -65,7 +58,7 @@
 <% end %>
 
 <%# === ACCEPTED FRIENDS === %>
-<div class="quest-card p-6">
+<div class="quest-card p-4 sm:p-6">
   <h2 class="text-lg font-bold tracking-wide mb-4">Meus Amigos</h2>
   <div id="accepted_friends" class="space-y-3">
     <% @accepted_friends.each do |friendship| %>
@@ -73,9 +66,9 @@
     <% end %>
   </div>
   <% if @accepted_friends.empty? %>
-    <div class="text-center py-8">
-      <div class="text-3xl mb-2 opacity-30">&#x1F91D;</div>
-      <p class="text-[var(--color-quest-gold-dim)] text-sm">Nenhum amigo ainda. Envie um convite!</p>
+    <div class="quest-empty-state">
+      <div class="quest-empty-state-icon">&#x1F91D;</div>
+      <p class="quest-empty-state-text">Nenhum amigo ainda. Envie um convite!</p>
     </div>
   <% end %>
 </div>

@@ -10,6 +10,9 @@ export default class extends Controller {
   }
 
   connect() {
+    const styles = getComputedStyle(document.documentElement)
+    this.questGold = styles.getPropertyValue('--color-quest-gold').trim()
+    this.parchment = styles.getPropertyValue('--color-parchment').trim()
     this.#renderChart()
   }
 
@@ -17,6 +20,13 @@ export default class extends Controller {
     if (this.chart) {
       this.chart.destroy()
     }
+  }
+
+  #hexToRgba(hex, alpha) {
+    const r = parseInt(hex.slice(1, 3), 16)
+    const g = parseInt(hex.slice(3, 5), 16)
+    const b = parseInt(hex.slice(5, 7), 16)
+    return `rgba(${r},${g},${b},${alpha})`
   }
 
   #renderChart() {
@@ -28,12 +38,12 @@ export default class extends Controller {
         labels: this.labelsValue,
         datasets: [{
           data: this.valuesValue,
-          backgroundColor: "rgba(201,169,110,0.2)",
-          borderColor: "rgb(201,169,110)",
-          pointBackgroundColor: "rgb(201,169,110)",
-          pointBorderColor: "rgb(201,169,110)",
+          backgroundColor: this.#hexToRgba(this.questGold, 0.2),
+          borderColor: this.questGold,
+          pointBackgroundColor: this.questGold,
+          pointBorderColor: this.questGold,
           pointHoverBackgroundColor: "#fff",
-          pointHoverBorderColor: "rgb(201,169,110)",
+          pointHoverBorderColor: this.questGold,
           borderWidth: 2
         }]
       },
@@ -51,13 +61,13 @@ export default class extends Controller {
               display: false
             },
             grid: {
-              color: "rgba(201,169,110,0.1)"
+              color: this.#hexToRgba(this.questGold, 0.1)
             },
             angleLines: {
-              color: "rgba(201,169,110,0.1)"
+              color: this.#hexToRgba(this.questGold, 0.1)
             },
             pointLabels: {
-              color: "#f4e8d1",
+              color: this.parchment,
               font: {
                 size: 12
               }

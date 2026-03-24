@@ -1,50 +1,44 @@
 <%# === HEADER === %>
-<div class="mb-8">
-  <%= link_to root_path, class: "back-link" do %>
-    <svg class="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-    </svg>
-    Quest Board
-  <% end %>
-  <h1 class="text-3xl font-bold tracking-wide">Meu Perfil</h1>
+<div class="mb-6 sm:mb-8">
+  <h1 class="text-2xl sm:text-3xl font-bold tracking-wide">Meu Perfil</h1>
 </div>
 
 <%# === PROFILE CARD === %>
-<div class="quest-card p-6 mb-6">
-  <div class="flex items-center gap-5 mb-6">
+<div class="quest-card p-4 sm:p-6 mb-6">
+  <div class="flex items-center gap-4 sm:gap-5 mb-6">
     <%# Avatar %>
-    <div class="w-20 h-20 rounded-full bg-[var(--color-dark-leather-light)] border-2 border-[rgba(201,169,110,0.2)] flex items-center justify-center">
-      <svg class="w-10 h-10 text-[var(--color-quest-gold-dim)]" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[var(--color-dark-leather-light)] border-2 border-[var(--border-default)] flex items-center justify-center flex-shrink-0">
+      <svg class="w-8 h-8 sm:w-10 sm:h-10 text-[var(--color-quest-gold-dim)]" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
       </svg>
     </div>
-    <div>
-      <h2 class="text-xl font-bold text-[var(--color-parchment)]"><%= @profile.user.email %></h2>
-      <p class="text-[var(--color-quest-gold)] text-sm font-display font-semibold tracking-wider mt-0.5"><%= @profile.title %></p>
+    <div class="min-w-0">
+      <h2 class="text-lg sm:text-xl font-bold text-[var(--color-parchment)] truncate"><%= @profile.user.name %></h2>
+      <p class="text-[var(--color-quest-gold)] text-xs sm:text-sm font-display font-semibold tracking-wider mt-0.5"><%= @profile.title %></p>
     </div>
   </div>
 
   <%# Stats Grid %>
-  <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 mb-6">
     <div class="stat-card">
       <p class="text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold mb-1">Nível</p>
-      <p class="text-3xl font-display font-bold text-[var(--color-mana-blue)]"><%= @profile.level %></p>
+      <p class="text-2xl sm:text-3xl font-display font-bold text-[var(--color-mana-blue)]"><%= @profile.level %></p>
     </div>
     <div class="stat-card">
       <p class="text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold mb-1">XP Total</p>
-      <p class="text-3xl font-display font-bold text-[var(--color-quest-gold)]"><%= @profile.xp %></p>
+      <p class="text-2xl sm:text-3xl font-display font-bold text-[var(--color-quest-gold)]"><%= @profile.xp %></p>
     </div>
     <div class="stat-card">
       <p class="text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold mb-1">Streak</p>
-      <p class="text-3xl font-display font-bold text-[var(--color-xp-amber)]"><%= @profile.streak_days %> <span class="text-lg" role="img" aria-label="dias consecutivos">&#x1F525;</span></p>
+      <p class="text-2xl sm:text-3xl font-display font-bold text-[var(--color-xp-amber)]"><%= @profile.streak_days %> <span class="text-base sm:text-lg" role="img" aria-label="dias consecutivos">&#x1F525;</span></p>
     </div>
     <div class="stat-card">
       <p class="text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold mb-1">Recorde</p>
-      <p class="text-3xl font-display font-bold text-[var(--color-forest-sage)]"><%= @profile.max_streak %></p>
+      <p class="text-2xl sm:text-3xl font-display font-bold text-[var(--color-forest-sage)]"><%= @profile.max_streak %></p>
     </div>
-    <div class="stat-card">
+    <div class="stat-card col-span-2 sm:col-span-1">
       <p class="text-[10px] text-[var(--color-quest-gold-dim)] uppercase tracking-widest font-semibold mb-1">Tarefas</p>
-      <p class="text-3xl font-display font-bold text-[var(--color-parchment)]"><%= @total_tasks %></p>
+      <p class="text-2xl sm:text-3xl font-display font-bold text-[var(--color-parchment)]"><%= @total_tasks %></p>
     </div>
   </div>
 
@@ -54,8 +48,8 @@
       <span>Progresso do Nível</span>
       <span class="font-semibold tabular-nums"><%= @profile.xp_progress_percentage %>%</span>
     </div>
-    <%= render "shared/xp_progress", percentage: @profile.xp_progress_percentage, height_class: "h-3" %>
-    <div class="flex justify-between text-[10px] mt-1.5 text-[var(--color-quest-gold-dim)] opacity-70">
+    <%= render "shared/xp_progress", percentage: @profile.xp_progress_percentage, size: "lg" %>
+    <div class="flex justify-between text-[10px] mt-1.5 text-[var(--color-quest-gold-dim)] opacity-60">
       <span>XP Atual: <%= @profile.xp - GamificationProfile::LEVELS[@profile.level] %></span>
       <% if @profile.level < GamificationProfile::LEVELS.keys.max %>
         <span>Próximo Nível: <%= GamificationProfile::LEVELS[@profile.level + 1] - GamificationProfile::LEVELS[@profile.level] %></span>
@@ -67,22 +61,22 @@
 </div>
 
 <%# === ATRIBUTOS DO PERSONAGEM === %>
-<div class="quest-card p-6 mb-6">
-  <h2 class="text-xl font-bold tracking-wide mb-5">Atributos do Usuário</h2>
+<div class="quest-card p-4 sm:p-6 mb-6">
+  <h2 class="text-lg sm:text-xl font-bold tracking-wide mb-4 sm:mb-5">Atributos do Usuário</h2>
   <%= render "profiles/attribute_radar" %>
 </div>
 
 <%# === RECENT ACHIEVEMENTS === %>
-<div class="quest-card p-6">
-  <div class="flex justify-between items-center mb-5">
-    <h2 class="text-xl font-bold tracking-wide">Conquistas Recentes</h2>
-    <%= link_to achievements_profile_path, class: "text-[var(--color-quest-gold-dim)] hover:text-[var(--color-quest-gold)] text-xs font-semibold uppercase tracking-wider transition-colors" do %>
+<div class="quest-card p-4 sm:p-6">
+  <div class="flex justify-between items-center mb-4 sm:mb-5">
+    <h2 class="text-lg sm:text-xl font-bold tracking-wide">Conquistas Recentes</h2>
+    <%= link_to achievements_profile_path, class: "quest-link" do %>
       Ver Todas &rarr;
     <% end %>
   </div>
 
   <% if @recent_achievements.any? %>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
       <% @recent_achievements.each do |achievement| %>
         <div class="achievement-unlocked rounded-xl p-4 flex flex-col items-center text-center">
           <div class="text-3xl mb-2" role="img" aria-label="<%= achievement.name %>"><%= achievement.icon_url %></div>
@@ -93,9 +87,9 @@
       <% end %>
     </div>
   <% else %>
-    <div class="text-center py-8">
-      <div class="text-3xl mb-2 opacity-30" role="img" aria-label="Troféu">&#x1F3C6;</div>
-      <p class="text-[var(--color-quest-gold-dim)] text-sm">Nenhuma conquista ainda. Continue completando tarefas!</p>
+    <div class="quest-empty-state">
+      <div class="quest-empty-state-icon" role="img" aria-label="Troféu">&#x1F3C6;</div>
+      <p class="quest-empty-state-text">Nenhuma conquista ainda. Continue completando tarefas!</p>
     </div>
   <% end %>
 </div>

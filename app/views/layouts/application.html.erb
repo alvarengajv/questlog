@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-full">
+<html class="min-h-screen">
   <head>
     <title><%= content_for(:title) || "QuestLog" %></title>
     <meta name="description" content="<%= content_for(:description) || "QuestLog — Gamifique suas tarefas, suba de nível e conquiste seus objetivos." %>">
@@ -30,17 +30,17 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="h-full">
+  <body class="min-h-screen bg-[var(--color-shadow-oak)]">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:rounded-md focus:bg-[var(--color-quest-gold)] focus:text-[var(--color-shadow-oak)] focus:font-semibold focus:text-sm">Pular para o conteúdo</a>
     <% if logged_in? %>
       <%# ============================================ %>
       <%# === LAYOUT WITH SIDENAV (logged in) ======= %>
       <%# ============================================ %>
-      <div class="flex h-full">
+      <div class="flex min-h-screen">
         <%# === SIDENAV === %>
-        <aside class="hidden md:flex flex-col w-56 flex-shrink-0 bg-[var(--color-dark-leather)] border-r border-[rgba(201,169,110,0.1)] fixed inset-y-0 left-0 z-40">
+        <aside class="hidden md:flex flex-col w-56 flex-shrink-0 bg-[var(--color-dark-leather)] border-r border-[var(--border-subtle)] fixed inset-y-0 left-0 z-40">
           <%# Logo %>
-          <div class="px-5 py-5 border-b border-[rgba(201,169,110,0.08)]">
+          <div class="px-5 py-5 border-b border-[var(--border-subtle)]">
             <%= link_to root_path, class: "flex items-center gap-2.5 group" do %>
               <img src="/questlog_logo_w_text.svg" alt="QuestLog" class="h-8 opacity-90 group-hover:opacity-100 transition-opacity">
             <% end %>
@@ -49,9 +49,9 @@
           <%# Gamification summary %>
           <turbo-frame id="gamification_bar">
             <% if current_user.gamification_profile %>
-              <div class="px-5 py-4 border-b border-[rgba(201,169,110,0.08)]">
+              <div class="px-5 py-4 border-b border-[var(--border-subtle)]">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="font-display text-[var(--color-xp-amber)] text-xs font-semibold tracking-wider uppercase">Lv.<%= current_user.gamification_profile.level %></span>
+                  <span class="font-display text-[var(--color-xp-amber)] text-xs font-semibold tracking-wider uppercase"><%= current_user.name %> — Lv.<%= current_user.gamification_profile.level %></span>
                   <span class="text-[var(--color-xp-amber)] text-xs font-medium"><%= streak_display(current_user.gamification_profile) %></span>
                 </div>
                 <div class="mb-1.5">
@@ -94,10 +94,7 @@
           </nav>
 
           <%# Bottom: Logout %>
-          <div class="px-3 pb-4 mt-auto border-t border-[rgba(201,169,110,0.08)] pt-3">
-            <div class="px-3 mb-3">
-              <p class="text-[10px] text-[var(--color-quest-gold-dim)] truncate"><%= current_user.email %></p>
-            </div>
+          <div class="px-3 pb-4 mt-auto border-t border-[var(--border-subtle)] pt-3">
             <%= button_to logout_path, method: :delete, class: "sidenav-link w-full text-left text-[var(--color-critical-hit)]/60 hover:text-[var(--color-critical-hit)] hover:bg-[rgba(184,76,58,0.08)]" do %>
               <svg class="w-[18px] h-[18px]" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
@@ -108,7 +105,7 @@
         </aside>
 
         <%# === MOBILE TOP BAR === %>
-        <div class="md:hidden fixed top-0 inset-x-0 z-40 border-b border-[rgba(201,169,110,0.1)] bg-[var(--color-dark-leather)]/95 backdrop-blur-md">
+        <div class="md:hidden fixed top-0 inset-x-0 z-40 border-b border-[var(--border-subtle)] bg-[var(--color-dark-leather)]/95 backdrop-blur-md">
           <div class="flex items-center justify-between h-14 px-4">
             <%= link_to root_path, class: "flex items-center gap-2 group" do %>
               <img src="/questlog_logo_w_text.svg" alt="QuestLog" class="h-7 opacity-90">
@@ -124,8 +121,17 @@
           </div>
         </div>
 
+
+
+        <%# === MAIN CONTENT === %>
+        <div class="flex-1 md:ml-56">
+          <main id="main-content" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-8 mt-14 md:mt-0 page-enter">
+            <%= yield %>
+          </main>
+        </div>
+
         <%# === MOBILE BOTTOM NAV === %>
-        <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-[rgba(201,169,110,0.1)] bg-[rgba(26,20,13,0.95)] backdrop-blur-md md:hidden" aria-label="Menu principal">
+        <nav class="fixed bottom-0 inset-x-0 z-50 border-t border-[var(--border-subtle)] bg-[rgba(26,20,13,0.95)] backdrop-blur-md md:hidden pb-[env(safe-area-inset-bottom)]" aria-label="Menu principal">
           <div class="flex items-center justify-around h-14">
             <%= link_to root_path, class: "bottom-nav-link #{current_page?(root_path) ? 'bottom-nav-link-active' : ''}", aria: { current: (current_page?(root_path) ? "page" : nil) } do %>
               <svg class="w-5 h-5" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
@@ -156,20 +162,13 @@
             <% end %>
           </div>
         </nav>
-
-        <%# === MAIN CONTENT === %>
-        <div class="flex-1 md:ml-56">
-          <main id="main-content" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 md:pb-8 mt-14 md:mt-0 page-enter">
-            <%= yield %>
-          </main>
-        </div>
       </div>
 
     <% else %>
       <%# ============================================ %>
       <%# === LAYOUT WITHOUT SIDENAV (logged out) === %>
       <%# ============================================ %>
-      <nav class="border-b border-[rgba(201,169,110,0.1)] bg-[var(--color-dark-leather)]/80 backdrop-blur-md sticky top-0 z-50">
+      <nav class="border-b border-[var(--border-subtle)] bg-[var(--color-dark-leather)]/80 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex items-center justify-between h-14">
             <%= link_to root_path, class: "flex items-center gap-2.5 group" do %>
@@ -198,7 +197,7 @@
 
     <%# === FLASH MESSAGES === %>
     <% flash.each do |key, message| %>
-      <div role="alert" class="quest-flash fixed bottom-6 right-6 z-40
+      <div role="alert" class="quest-flash fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-40
         <%= key == 'notice' ? 'quest-flash-notice' : 'quest-flash-alert' %>"
         data-controller="flash" data-flash-delay-value="3000">
         <%= message %>

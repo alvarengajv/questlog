@@ -1,7 +1,7 @@
 class ItemsController < ApplicationController
   before_action :require_authentication
   before_action :set_task_list
-  before_action :set_item, only: [:edit, :update, :destroy, :toggle]
+  before_action :set_item, only: [ :edit, :update, :destroy, :toggle, :move ]
 
   def edit
   end
@@ -10,10 +10,12 @@ class ItemsController < ApplicationController
     @item = @task_list.items.build(item_params)
     @item.position = (@task_list.items.maximum(:position) || 0) + 1
 
+    @source = params[:source]
+
     if @item.save
       respond_to do |format|
         format.turbo_stream
-        format.html { redirect_to @task_list }
+        format.html { redirect_to @source == "board" ? task_lists_path : @task_list }
       end
     else
       head :unprocessable_entity
@@ -48,7 +50,7 @@ class ItemsController < ApplicationController
       @gamification_result = GamificationService.item_completed!(current_user, @item)
     else
       @item.pending!
-      @gamification_result = GamificationService::Result.new(xp_gained: 0, unlocked_achievements: [])
+      @gamification_result = GamificationService::Result.new(xp_gained: 0, unlocked_achievements: [], leveled_up: false, new_level: nil)
     end
 
     @new_recurring_item = RecurrenceService.call(@item)
@@ -56,6 +58,20 @@ class ItemsController < ApplicationController
     respond_to do |format|
       format.turbo_stream
       format.html { redirect_to @task_list }
+    end
+  end
+
+  def move
+    target_list = current_user.task_lists.find(params[:target_task_list_id])
+    position = (target_list.items.maximum(:position) || 0) + 1
+
+    @source_list = @task_list
+    @item.update!(task_list: target_list, position: position)
+    @target_list = target_list
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to task_lists_path }
     end
   end
 
