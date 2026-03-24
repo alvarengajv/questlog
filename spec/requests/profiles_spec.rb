@@ -49,6 +49,23 @@ RSpec.describe "Profiles", type: :request do
         expect(response.body).to include("Second Achievement")
         expect(response.body).not_to include("Third Achievement")
       end
+
+      it "loads attribute scores from active task lists" do
+        list = create(:task_list, user: user, title: "Força")
+        create(:item, :completed, :high_priority, task_list: list) # 20 XP
+        create(:task_list, :archived, user: user, title: "Arquivada")
+
+        scores = { "Força" => 20 }
+        normalized = { "Força" => 100 }
+        allow(AttributeService).to receive(:scores_for).with(user).and_return(scores)
+        allow(AttributeService).to receive(:normalize).with(scores).and_return(normalized)
+
+        get profile_path
+
+        expect(response).to be_successful
+        expect(AttributeService).to have_received(:scores_for).with(user)
+        expect(AttributeService).to have_received(:normalize).with(scores)
+      end
     end
   end
 
