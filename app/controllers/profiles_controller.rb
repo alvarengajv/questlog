@@ -7,6 +7,7 @@ class ProfilesController < ApplicationController
     @total_tasks = Item.where(task_list: current_user.task_lists).completed.count
     @attribute_scores = AttributeService.scores_for(current_user)
     @attribute_scores_normalized = AttributeService.normalize(@attribute_scores)
+    @attribute_colors = AttributeService.colors_for(current_user)
   end
 
   def achievements

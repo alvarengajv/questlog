@@ -66,30 +66,10 @@
   </div>
 </div>
 
-<%# === RADAR CHART (ATRIBUTOS) === %>
+<%# === ATRIBUTOS DO PERSONAGEM === %>
 <div class="quest-card p-6 mb-6">
-  <h2 class="text-xl font-bold tracking-wide mb-5">Atributos</h2>
-
-  <% if @attribute_scores_normalized.empty? %>
-    <div class="text-center py-8">
-      <div class="text-3xl mb-2 opacity-30" role="img" aria-label="Gráfico">&#x1F4CA;</div>
-      <p class="text-[var(--color-quest-gold-dim)] text-sm">Crie listas para visualizar seus atributos</p>
-    </div>
-  <% elsif @attribute_scores_normalized.size < 3 %>
-    <div class="text-center py-8">
-      <div class="text-3xl mb-2 opacity-30" role="img" aria-label="Gráfico">&#x1F4CA;</div>
-      <p class="text-[var(--color-quest-gold-dim)] text-sm">Crie ao menos 3 listas para desbloquear o gráfico radar</p>
-    </div>
-  <% else %>
-    <div class="flex justify-center">
-      <div class="w-full max-w-[400px]"
-           data-controller="radar-chart"
-           data-radar-chart-labels-value="<%= @attribute_scores_normalized.keys.to_json %>"
-           data-radar-chart-values-value="<%= @attribute_scores_normalized.values.to_json %>">
-        <canvas data-radar-chart-target="canvas"></canvas>
-      </div>
-    </div>
-  <% end %>
+  <h2 class="text-xl font-bold tracking-wide mb-5">Atributos do Usuário</h2>
+  <%= render "profiles/attribute_radar" %>
 </div>
 
 <%# === RECENT ACHIEVEMENTS === %>

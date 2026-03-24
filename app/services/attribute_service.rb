@@ -8,10 +8,10 @@ class AttributeService
     lists_with_scores = user.task_lists
       .where(status: :active)
       .left_joins(:items)
-      .group("task_lists.id", "task_lists.title")
+      .group("task_lists.id", "task_lists.title", "task_lists.color")
       .pluck(
         Arel.sql("task_lists.title"),
-        Arel.sql(<<~SQL.squish)
+        Arel.sql(<<~SQL.squish),
           COALESCE(SUM(
             CASE WHEN items.status = 1 THEN
               CASE items.priority
@@ -24,9 +24,18 @@ class AttributeService
             END
           ), 0)
         SQL
+        Arel.sql("task_lists.color")
       )
 
-    lists_with_scores.to_h
+    lists_with_scores.to_h { |title, score, _color| [title, score] }
+  end
+
+  # Returns { "List Name" => "#hex_color", ... } for all active task_lists.
+  def self.colors_for(user)
+    user.task_lists
+      .where(status: :active)
+      .pluck(:title, :color)
+      .to_h
   end
 
   # Normalizes scores to 0-100 scale.

@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
-import Chart from "chart.js"
+import { Chart, RadarController, RadialLinearScale, PointElement, LineElement, Filler, Tooltip } from "chart.js"
+Chart.register(RadarController, RadialLinearScale, PointElement, LineElement, Filler, Tooltip)
 
 export default class extends Controller {
   static targets = ["canvas"]
@@ -37,8 +38,8 @@ export default class extends Controller {
         }]
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: true,
+        responsive: false,
+        maintainAspectRatio: false,
         plugins: {
           legend: { display: false }
         },
